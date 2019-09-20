@@ -32,11 +32,12 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     public SoundWave(double[] lchannel, double[] rchannel) {
         for(double sample : lchannel){
             this.lchannel.add(sample);
-            this.samples++;
         }
         for(double sample : rchannel){
             this.rchannel.add(sample);
         }
+
+        updateSamples();
 
         // TODO: Potentially find a method
         // TODO: check if inputs need to be checked
@@ -131,8 +132,16 @@ public class SoundWave implements HasSimilarity<SoundWave> {
             this.lchannel.add(lchannel[i]);
             this.rchannel.add(rchannel[i]);
         }
-
+        updateSamples();
         return;
+    }
+
+    /**
+     * Updates the field samples
+     *
+     */
+    public void updateSamples() {
+        this.samples = this.lchannel.size();
     }
 
     /**
@@ -162,6 +171,17 @@ public class SoundWave implements HasSimilarity<SoundWave> {
         }
     }
 
+    /**
+     * Superimpose two waves, if one wave is longer than the
+     * other, treat the shorter wave as zeros
+     *
+     * @param longerWave the longer of the two waves,
+     *                   must be longer than shorterWave
+     * @param shorterWave the shorter of the two waves.
+     *
+     * @return a new soundwave with the amplitudes of both this wave
+     * and the other wave added
+     */
     private SoundWave addWaves (SoundWave longerWave, SoundWave shorterWave) {
         double[] shorterLChannel = shorterWave.getLeftChannel();
         double[] shorterRChannel = shorterWave.getRightChannel();
@@ -185,10 +205,14 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @return a new sound wave with an echo.
      */
     public SoundWave addEcho(int delta, double alpha) {
-        SoundWave newWave = new SoundWave(this.getLeftChannel(), this.getRightChannel());
+        double[] zeros = new double[delta];
+        SoundWave echo = new SoundWave(zeros,zeros);
+        echo.append(this);
+        echo.scaleNoClip(alpha);
 
+        SoundWave newWave = this.add(echo);
 
-        return null; // change this
+        return newWave;
     }
 
     /**
@@ -225,6 +249,19 @@ public class SoundWave implements HasSimilarity<SoundWave> {
         }
         else {
             return val;
+        }
+    }
+
+    /**
+     * Scale the amplitude of this wave by a scaling factor.
+     * Does not clip values
+     *
+     * @param scalingFactor is a value > 0.
+     */
+    public void scaleNoClip (double scalingFactor) {
+        for (int i = 0; i < this.samples; i++) {
+            this.lchannel.set(i, this.lchannel.get(i) * scalingFactor);
+            this.rchannel.set(i, this.rchannel.get(i) * scalingFactor);
         }
     }
 
