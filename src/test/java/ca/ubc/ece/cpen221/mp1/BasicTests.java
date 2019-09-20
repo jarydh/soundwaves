@@ -88,6 +88,27 @@ public class BasicTests {
         Assert.assertArrayEquals(rchannel, rchannel3, 0.00001);
     }
 
+
+    @Test
+    public void addWaves() {
+        double[] lchannel1 = {1.0};
+        double[] lchannel2 = {1.0, 2.0};
+
+        double[] rchannel1 = {2.0};
+        double[] rchannel2 = {2.0, 1.0};
+
+        double[] lchannel = {2.0, 2.0};
+        double[] rchannel = {4.0, 1.0};
+
+        SoundWave wave = new SoundWave(lchannel1,rchannel1);
+        SoundWave wave2 = new SoundWave(lchannel2,rchannel2);
+        SoundWave wave3 = wave.add(wave2);
+        double[] lchannel3 = wave3.getLeftChannel();
+        Assert.assertArrayEquals(lchannel, lchannel3, 0.00001);
+        double[] rchannel3 = wave3.getRightChannel();
+        Assert.assertArrayEquals(rchannel, rchannel3, 0.00001);
+    }
+
     // TODO: add more tests
 
 }

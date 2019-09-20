@@ -146,11 +146,35 @@ public class SoundWave implements HasSimilarity<SoundWave> {
 
     /**
      * Create a new wave by adding another wave to this wave.
-     * (You should also write clear specifications for this method.)
+     * If one wave is longer than the other, treat the shorter
+     * wave as having zero values for the remainder of the wave
+     *
+     * @param other the wave to append.
+     * @return a new soundwave with the amplitudes of both this wave
+     * and the other wave added
      */
     public SoundWave add(SoundWave other) {
-        // TODO: Implement this method
-        return null; // change this
+        if (this.samples > other.samples) {
+            return addWaves(this, other);
+        }
+        else {
+            return addWaves(other,this);
+        }
+    }
+
+    private SoundWave addWaves (SoundWave longerWave, SoundWave shorterWave) {
+        double[] shorterLChannel = shorterWave.getLeftChannel();
+        double[] shorterRChannel = shorterWave.getRightChannel();
+
+        double[] addedLChannel = longerWave.getLeftChannel();
+        double[] addedRChannel = longerWave.getRightChannel();
+
+        for (int i = 0; i < shorterWave.samples; i++) {
+            addedLChannel[i] = addedLChannel[i] + shorterLChannel[i];
+            addedRChannel[i] = addedRChannel[i] + shorterRChannel[i];
+        }
+
+        return new SoundWave(addedLChannel, addedRChannel);
     }
 
     /**
