@@ -61,7 +61,6 @@ public class SoundWave implements HasSimilarity<SoundWave> {
         for (int i = 0; i < lchannel.size(); i++) {
             leftChannel[i] = lchannel.get(i);
         }
-
         return leftChannel;
     }
 
