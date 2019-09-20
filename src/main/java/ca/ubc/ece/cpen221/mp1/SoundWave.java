@@ -64,7 +64,13 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param duration  the duration of the sine wave, in seconds
      */
     public SoundWave(double freq, double phase, double amplitude, double duration) {
-        // TODO: Implement this constructor
+        for(int i = 0; i < duration * SAMPLES_PER_SECOND; i++){
+            Double nextAmp = amplitude * Math.sin(freq*2.0*Math.PI*((double) i/SAMPLES_PER_SECOND ) - phase );
+            lchannel.add(nextAmp);
+            rchannel.add(nextAmp);
+        }
+        this.samples = (int) duration * SAMPLES_PER_SECOND;
+        // TODO: add or subtract phase?
     }
 
     /**

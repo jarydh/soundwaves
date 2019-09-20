@@ -17,7 +17,6 @@ public class BasicTests {
         Assert.assertArrayEquals(rchannel, rchannel1, 0.00001);
     }
 
-    @Test
     public void testCreateEmptyWave() {
         SoundWave wave = new SoundWave();
         double [] lchannel = wave.getLeftChannel();
@@ -26,6 +25,24 @@ public class BasicTests {
         double[] rchannel1 = {};
         double [] rchannel = wave.getLeftChannel();
         Assert.assertArrayEquals(rchannel, rchannel1, 0.00001);
+    }
+
+    @Test
+    public void testCreateSineWaveNoOffset() {
+        SoundWave wave = new SoundWave(1, 0, 0.65, 1 );
+        double[] lchannel = wave.getLeftChannel();
+        assertEquals(0.65, lchannel[44100/4], 0.00001);
+        double[] rchannel = wave.getRightChannel();
+        assertEquals(0.65, rchannel[44100/4], 0.00001);
+    }
+
+    @Test
+    public void testCreateSineWaveWithOffset() {
+        SoundWave wave = new SoundWave(1, Math.PI/2, 0.5, 1 );
+        double[] lchannel = wave.getLeftChannel();
+        assertEquals(0.5, lchannel[44100/2], 0.00001);
+        double[] rchannel = wave.getRightChannel();
+        assertEquals(0.5, rchannel[44100/2], 0.00001);
     }
 
     @Test
@@ -94,52 +111,9 @@ public class BasicTests {
         double[] lchannel1 = {1.0};
         double[] lchannel2 = {1.0, 2.0};
 
-        double[] rchannel1 = {2.0};
-        double[] rchannel2 = {2.0, 1.0};
 
-        double[] lchannel = {2.0, 2.0};
-        double[] rchannel = {4.0, 1.0};
-
-        SoundWave wave = new SoundWave(lchannel1,rchannel1);
-        SoundWave wave2 = new SoundWave(lchannel2,rchannel2);
-        SoundWave wave3 = wave.add(wave2);
-        double[] lchannel3 = wave3.getLeftChannel();
-        Assert.assertArrayEquals(lchannel, lchannel3, 0.00001);
-        double[] rchannel3 = wave3.getRightChannel();
-        Assert.assertArrayEquals(rchannel, rchannel3, 0.00001);
     }
 
-    @Test
-    public void scaleWave() {
-        double[] lchannel1 = {1.0, 0.5, 0.2};
-        double[] rchannel1 = {2.0, 0.1, 0.3};
-
-        double[] lchannel = {1.0, 1.0, 0.4};
-        double[] rchannel = {1.0, 0.2, 0.6};
-
-        SoundWave wave = new SoundWave(lchannel1,rchannel1);
-        wave.scale(2.0);
-        double[] lchannel2 = wave.getLeftChannel();
-        Assert.assertArrayEquals(lchannel, lchannel2, 0.00001);
-        double[] rchannel2 = wave.getRightChannel();
-        Assert.assertArrayEquals(rchannel, rchannel2, 0.00001);
-    }
-
-    @Test
-    public void addEcho() {
-        double[] lchannel1 = {2.0, 4.0, 0.8};
-        double[] rchannel1 = {1.0, 6.0, 4.0};
-
-        double[] lchannel = {2.0, 5.0, 2.8, 0.4};
-        double[] rchannel = {1.0, 6.5, 7.0, 2.0};
-
-        SoundWave wave = new SoundWave(lchannel1,rchannel1);
-        wave = wave.addEcho(1, 0.5);
-        double[] lchannel2 = wave.getLeftChannel();
-        Assert.assertArrayEquals(lchannel, lchannel2, 0.00001);
-        double[] rchannel2 = wave.getRightChannel();
-        Assert.assertArrayEquals(rchannel, rchannel2, 0.00001);
-    }
     // TODO: add more tests
 
 }
