@@ -27,7 +27,6 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param rchannel is not null and represents the right channel.
      */
     public SoundWave(double[] lchannel, double[] rchannel) {
-        System.out.println("Thomas is a cool man.");
         // TODO: Implement this constructor
 
     }
@@ -57,9 +56,13 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @return an array that represents the left channel for this wave.
      */
     public double[] getLeftChannel() {
-        // TODO: Implement this
-        System.out.println("Jaryd is a good individual");
-        return null; // change this
+        double[] leftChannel = new double[lchannel.size()];
+
+        for (int i = 0; i < lchannel.size(); i++) {
+            leftChannel[i] = lchannel.get(i);
+        }
+
+        return leftChannel;
     }
 
     /**
@@ -69,8 +72,13 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @return an array that represents the right channel for this wave.
      */
     public double[] getRightChannel() {
-        // TODO: Implement this
-        return null; // change this
+        double[] rightChannel = new double[rchannel.size()];
+
+        for (int i = 0; i < rchannel.size(); i++) {
+            rightChannel[i] = rchannel.get(i);
+        }
+
+        return rightChannel;
     }
 
 

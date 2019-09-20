@@ -17,6 +17,16 @@ public class BasicTests {
         Assert.assertArrayEquals(rchannel, rchannel1, 0.00001);
     }
 
+    public void testCreateEmptyWave() {
+        SoundWave wave = new SoundWave();
+        double [] lchannel = wave.getLeftChannel();
+        double[] lchannel1 = {};
+        Assert.assertArrayEquals(lchannel, lchannel1, 0.00001);
+        double[] rchannel1 = {};
+        double [] rchannel = wave.getLeftChannel();
+        Assert.assertArrayEquals(rchannel, rchannel1, 0.00001);
+    }
+
     // TODO: add more tests
 
 }
