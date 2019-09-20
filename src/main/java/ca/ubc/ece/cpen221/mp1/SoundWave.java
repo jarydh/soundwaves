@@ -65,7 +65,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      */
     public SoundWave(double freq, double phase, double amplitude, double duration) {
         for(int i = 0; i < duration * SAMPLES_PER_SECOND; i++){
-            Double nextAmp = amplitude * Math.sin(freq*2.0*Math.PI*((double) i/SAMPLES_PER_SECOND ) - phase );
+            Double nextAmp = amplitude * Math.sin(freq * 2.0 * Math.PI * ((double) i / SAMPLES_PER_SECOND ) - phase );
             lchannel.add(nextAmp);
             rchannel.add(nextAmp);
         }
