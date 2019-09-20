@@ -27,6 +27,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param rchannel is not null and represents the right channel.
      */
     public SoundWave(double[] lchannel, double[] rchannel) {
+        System.out.println("Thomas is a cool man.");
         // TODO: Implement this constructor
 
     }
