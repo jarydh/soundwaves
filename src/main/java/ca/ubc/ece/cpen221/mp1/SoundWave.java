@@ -141,7 +141,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param other the wave to append.
      */
     public void append(SoundWave other) {
-        other.append(other.getLeftChannel(),other.getRightChannel());
+        this.append(other.getLeftChannel(),other.getRightChannel());
     }
 
     /**
