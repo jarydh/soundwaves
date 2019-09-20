@@ -4,6 +4,9 @@ import ca.ubc.ece.cpen221.mp1.utils.HasSimilarity;
 import javazoom.jl.player.StdPlayer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 public class SoundWave implements HasSimilarity<SoundWave> {
 
@@ -23,16 +26,28 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * amplitude values. After the SoundWave is created, changes to the
      * provided arguments will not affect the SoundWave.
      *
-     * @param lchannel is not null and represents the left channel.
-     * @param rchannel is not null and represents the right channel.
+     * @param lchannel is not null, contains only values between -1 and 1, is the same size as rchannel, and represents the left channel.
+     * @param rchannel is not null, contains only values between -1 and 1, is the same size as lchannel and represents the right channel.
      */
     public SoundWave(double[] lchannel, double[] rchannel) {
-        System.out.println("Thomas is a cool man.");
-        // TODO: Implement this constructor
+        for(double sample : lchannel){
+            this.lchannel.add(sample);
+            this.samples++;
+        }
+        for(double sample : rchannel){
+            this.rchannel.add(sample);
+        }
+
+        // TODO: Potentially find a method
+        // TODO: check if inputs need to be checked
 
     }
 
+    /**
+     * Creates an empty soundwave
+     */
     public SoundWave() {
+
         // TODO: You should implement a default constructor
         // that creates an empty wave
     }
@@ -58,7 +73,6 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      */
     public double[] getLeftChannel() {
         // TODO: Implement this
-        System.out.println("Jaryd is a good individual");
         return null; // change this
     }
 
