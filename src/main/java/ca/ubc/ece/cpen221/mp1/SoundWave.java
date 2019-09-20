@@ -181,11 +181,13 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * Create a new wave by adding an echo to this wave.
      *
      * @param delta > 0. delta is the lag between this wave and the echo wave.
-     * @param alpha > 0. alpha is the damping factor applied to the echo wave.
+     * @param alpha is the damping factor applied to the echo wave, 0 < alpha <= 1.
      * @return a new sound wave with an echo.
      */
     public SoundWave addEcho(int delta, double alpha) {
-        // TODO: Implement this method
+        SoundWave newWave = new SoundWave(this.getLeftChannel(), this.getRightChannel());
+
+
         return null; // change this
     }
 
@@ -197,7 +199,33 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param scalingFactor is a value > 0.
      */
     public void scale(double scalingFactor) {
-        // TODO: Implement this method.
+        double nextLeft;
+        double nextRight;
+        for (int i = 0; i < this.samples; i++) {
+            nextLeft = this.lchannel.get(i) * scalingFactor;
+            nextRight = this.rchannel.get(i) * scalingFactor;
+
+            this.lchannel.set(i, clipVal(nextLeft));
+            this.rchannel.set(i, clipVal(nextRight));
+        }
+    }
+
+    /**
+     * Clips values to remain between -1 and +1.
+     *
+     * @param val is any double.
+     *
+     * @return a value between -1 and 1
+     */
+    public double clipVal(double val) {
+        if ( val > 1.0) {
+            return 1.0;
+        } else if (val < -1.0) {
+            return -1.0;
+        }
+        else {
+            return val;
+        }
     }
 
     /**

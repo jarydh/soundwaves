@@ -109,6 +109,21 @@ public class BasicTests {
         Assert.assertArrayEquals(rchannel, rchannel3, 0.00001);
     }
 
+    @Test
+    public void scaleWave() {
+        double[] lchannel1 = {1.0, 0.5, 0.2};
+        double[] rchannel1 = {2.0, 0.1, 0.3};
+
+        double[] lchannel = {1.0, 1.0, 0.4};
+        double[] rchannel = {1.0, 0.2, 0.6};
+
+        SoundWave wave = new SoundWave(lchannel1,rchannel1);
+        wave.scale(2.0);
+        double[] lchannel2 = wave.getLeftChannel();
+        Assert.assertArrayEquals(lchannel, lchannel2, 0.00001);
+        double[] rchannel2 = wave.getRightChannel();
+        Assert.assertArrayEquals(rchannel, rchannel2, 0.00001);
+    }
     // TODO: add more tests
 
 }
