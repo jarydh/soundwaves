@@ -28,7 +28,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      */
     public SoundWave(double[] lchannel, double[] rchannel) {
         // TODO: Implement this constructor
-        System.out.println("Jaryd is a good individual");
+
     }
 
     public SoundWave() {
@@ -57,6 +57,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      */
     public double[] getLeftChannel() {
         // TODO: Implement this
+        System.out.println("Jaryd is a good individual");
         return null; // change this
     }
 
