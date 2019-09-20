@@ -110,7 +110,12 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param rchannel
      */
     public void append(double[] lchannel, double[] rchannel) {
-        // TODO: Implement this method.
+        for (int i = 0; i < lchannel.length; i++) {
+            this.lchannel.add(lchannel[i]);
+            this.rchannel.add(rchannel[i]);
+        }
+
+        return;
     }
 
     /**
@@ -119,7 +124,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param other the wave to append.
      */
     public void append(SoundWave other) {
-        // TODO: Implement this method.
+        other.append(other.getLeftChannel(),other.getRightChannel());
     }
 
     /**
