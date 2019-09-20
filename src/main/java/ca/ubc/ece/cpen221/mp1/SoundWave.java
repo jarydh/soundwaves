@@ -40,6 +40,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
 
         // TODO: Potentially find a method
         // TODO: check if inputs need to be checked
+        // TODO: Implement this constructor
 
     }
 
@@ -72,8 +73,12 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @return an array that represents the left channel for this wave.
      */
     public double[] getLeftChannel() {
-        // TODO: Implement this
-        return null; // change this
+        double[] leftChannel = new double[lchannel.size()];
+
+        for (int i = 0; i < lchannel.size(); i++) {
+            leftChannel[i] = lchannel.get(i);
+        }
+        return leftChannel;
     }
 
     /**
@@ -83,8 +88,13 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @return an array that represents the right channel for this wave.
      */
     public double[] getRightChannel() {
-        // TODO: Implement this
-        return null; // change this
+        double[] rightChannel = new double[rchannel.size()];
+
+        for (int i = 0; i < rchannel.size(); i++) {
+            rightChannel[i] = rchannel.get(i);
+        }
+
+        return rightChannel;
     }
 
 
@@ -117,7 +127,12 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param rchannel
      */
     public void append(double[] lchannel, double[] rchannel) {
-        // TODO: Implement this method.
+        for (int i = 0; i < lchannel.length; i++) {
+            this.lchannel.add(lchannel[i]);
+            this.rchannel.add(rchannel[i]);
+        }
+
+        return;
     }
 
     /**
@@ -126,7 +141,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param other the wave to append.
      */
     public void append(SoundWave other) {
-        // TODO: Implement this method.
+        other.append(other.getLeftChannel(),other.getRightChannel());
     }
 
     /**
