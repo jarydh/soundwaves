@@ -229,11 +229,11 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param scalingFactor is a value > 0.
      */
     public void scale(double scalingFactor) {
-        double nextLeft;
-        double nextRight;
-        for (int i = 0; i < this.samples; i++) {
-            nextLeft = this.lchannel.get(i) * scalingFactor;
-            nextRight = this.rchannel.get(i) * scalingFactor;
+                double nextLeft;
+                double nextRight;
+                for (int i = 0; i < this.samples; i++) {
+                    nextLeft = this.lchannel.get(i) * scalingFactor;
+                    nextRight = this.rchannel.get(i) * scalingFactor;
 
             this.lchannel.set(i, clipVal(nextLeft));
             this.rchannel.set(i, clipVal(nextRight));
@@ -247,7 +247,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      *
      * @return a value between -1 and 1
      */
-    public double clipVal(double val) {
+    private double clipVal(double val) {
         if ( val > 1.0) {
             return 1.0;
         } else if (val < -1.0) {
@@ -264,7 +264,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      *
      * @param scalingFactor is a value > 0.
      */
-    public void scaleNoClip (double scalingFactor) {
+    private void scaleNoClip (double scalingFactor) {
         for (int i = 0; i < this.samples; i++) {
             this.lchannel.set(i, this.lchannel.get(i) * scalingFactor);
             this.rchannel.set(i, this.rchannel.get(i) * scalingFactor);
@@ -277,11 +277,34 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      *
      * @param dt >= 0. dt is the time interval used in the filtering process.
      * @param RC > 0. RC is the time constant for the high-pass filter.
-     * @return
+     * @return a new soundwave that is obtained by applying a high pass filter
      */
     public SoundWave highPassFilter(int dt, double RC) {
-        // TODO: Implement this
-        return null; // change this
+        double alpha = RC / (RC + dt);
+        SoundWave filtered = new SoundWave(filterChannel(getLeftChannel(), alpha), filterChannel(getRightChannel(), alpha));
+
+        return filtered;
+    }
+
+    /**
+     * Return a new array that is obtained by applying a high-pass filter to
+     * the original array.
+     *
+     * @param channel is the channel to be filtered.
+     * @param alpha is a constant used for the high-pass filter.
+     * @return a new double array that is obtained by applying a high pass filter
+     * to the original array
+     */
+    private double[] filterChannel (double[] channel, double alpha){
+        double[] filterChannel = new double[channel.length];
+
+        filterChannel[0] = channel[0];
+
+        for (int i = 1; i < channel.length; i++) {
+            filterChannel[i] = alpha * filterChannel[i-1] + alpha * (channel[i] - channel[i-1]);
+        }
+
+        return filterChannel;
     }
 
     /**
