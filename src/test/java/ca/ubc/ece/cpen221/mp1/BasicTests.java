@@ -3,6 +3,7 @@ package ca.ubc.ece.cpen221.mp1;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class BasicTests {
 
@@ -115,5 +116,29 @@ public class BasicTests {
     }
 
     // TODO: add more tests
+
+    @Test
+    public void testContains() {
+        SoundWave wave = new SoundWave(20, 0, 1, 5);
+        SoundWave wave2 = new SoundWave(20, 1, 1, 5);
+
+        assertTrue(wave.contains(wave2));
+    }
+
+    @Test
+    public void testContainsWithScaling() {
+        SoundWave wave = new SoundWave(100, 0, 0.5, 5);
+        SoundWave wave2 = new SoundWave(100, 1, 1, 3);
+
+        assertTrue(wave.contains(wave2));
+    }
+
+    @Test
+    public void testContainsWithScaling2() {
+        SoundWave wave = new SoundWave(100, 0, 0.5, 5);
+        SoundWave wave2 = new SoundWave(120, 1, 1, 5);
+
+        Assert.assertFalse(wave.contains(wave2));
+    }
 
 }

@@ -3,10 +3,8 @@ package ca.ubc.ece.cpen221.mp1;
 import ca.ubc.ece.cpen221.mp1.utils.HasSimilarity;
 import javazoom.jl.player.StdPlayer;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 
 public class SoundWave implements HasSimilarity<SoundWave> {
 
@@ -307,8 +305,49 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * possible amplitude scaling.
      */
     public boolean contains(SoundWave other) {
-        // TODO: Implement this method
-        return true; // change this
+
+        if (other.samples > this.samples){
+            return false;
+        }
+
+        double scalingFactor;
+
+        for (int i = 0; i <= this.samples - other.samples; i++){
+
+            scalingFactor = this.lchannel.get(i)/other.lchannel.get(i);
+
+            if(containsChannelFromIndex(i, this.lchannel, other.lchannel, scalingFactor)){
+                if(containsChannelFromIndex(i, this.rchannel, other.rchannel, scalingFactor)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Determine if one channel of a wave fully contains another channel of a wave starting from the passed index
+     *
+     * @param startingIndex the index to check as the start of the contained wave. Must be a valid index of channel,
+     *                      and must be less than the length of channel minus the length of containedSample.
+     * @param channel the channel to be searched
+     * @param containedSample the sample to be searched for within the other channel
+     * @return true if containedSample occurs fully in channel after amplitude scaling and starts
+     * at the given index, and false if the contained channel does not start at this index or is not contained
+     * with any possible scaling
+     */
+    private static Boolean containsChannelFromIndex(int startingIndex, ArrayList<Double> channel, ArrayList<Double> containedSample, double scalingFactor) {
+
+        double floatingPointError = 0.0001;
+
+        for (int i = 0; i < containedSample.size(); i++) {
+            if ((scalingFactor - channel.get(i + startingIndex) / containedSample.get(i)) > floatingPointError) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
