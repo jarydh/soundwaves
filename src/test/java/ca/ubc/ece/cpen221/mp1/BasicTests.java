@@ -115,20 +115,26 @@ public class BasicTests {
 
     }
 
-    // TODO: add more tests
+    @Test
+    public void simpleTestContains() {
+        SoundWave wave = new SoundWave(new double[]{1, 2, 3, 4, 5}, new double[]{1, 2, 3, 4, 5});
+        SoundWave wave2 = new SoundWave(new double[]{2,3,4},new double[]{2, 3, 4});
+
+        assertTrue(wave.contains(wave2));
+    }
 
     @Test
     public void testContains() {
         SoundWave wave = new SoundWave(20, 0, 1, 5);
-        SoundWave wave2 = new SoundWave(20, 1, 1, 5);
+        SoundWave wave2 = new SoundWave(20, Math.PI/2, 1, 1);
 
         assertTrue(wave.contains(wave2));
     }
 
     @Test
     public void testContainsWithScaling() {
-        SoundWave wave = new SoundWave(100, 0, 0.5, 5);
-        SoundWave wave2 = new SoundWave(100, 1, 1, 3);
+        SoundWave wave = new SoundWave(new double[]{2, 4, 6, 8, 4}, new double[]{3, 9, 7, 13, 15});
+        SoundWave wave2 = new SoundWave(new double[]{3,4,2},new double[]{3.5, 6.5, 7.5}); //last 3 values scaled by 1/2
 
         assertTrue(wave.contains(wave2));
     }
