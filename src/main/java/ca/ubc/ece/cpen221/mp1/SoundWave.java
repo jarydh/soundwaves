@@ -355,12 +355,55 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * The similarity metric, gamma, is the sum of squares of
      * instantaneous differences.
      *
+     * algorithm proof: https://math.stackexchange.com/questions/1352726/minimizing-a-function-sum-of-squares
+     *
      * @param other is not null.
      * @return the similarity between this wave and other.
      */
     public double similarity(SoundWave other) {
-        // TODO: Implement this method
-        return -1;
+
+        if (other.samples > this.samples){
+            return other.similarity(this);
+        }
+
+        double beta = Math.abs(this.average()/other.average());
+        double residualSumOfSquares = 0;
+
+        int i;
+        for(i = 0; i < other.samples; i++){
+            residualSumOfSquares += Math.pow(lchannel.get(i) - beta * other.lchannel.get(i), 2);
+        }
+        for(;i < this.samples; i++){
+            residualSumOfSquares += Math.pow(lchannel.get(i), 2);
+        }
+
+        for(i = 0; i < other.samples; i++){
+            residualSumOfSquares += Math.pow(rchannel.get(i) - beta * other.rchannel.get(i), 2);
+        }
+        for(;i < this.samples; i++){
+            residualSumOfSquares += Math.pow(rchannel.get(i), 2);
+        }
+
+    return 1 / (1 + residualSumOfSquares);
+
+    }
+
+    /**
+     * computes the mean value of all samples from both channels
+     * @return that average
+     */
+    private double average(){
+        double sum = 0;
+
+        for( double sample:lchannel){
+            sum += sample;
+        }
+
+        for( double sample:rchannel){
+            sum += sample;
+        }
+
+        return sum/this.samples;
     }
 
     /**
