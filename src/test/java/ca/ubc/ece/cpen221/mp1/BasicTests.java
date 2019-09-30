@@ -106,18 +106,7 @@ public class BasicTests {
         Assert.assertArrayEquals(rchannel, rchannel3, 0.00001);
     }
 
-    @Test
-    public void highPass() {
-        double[] lchannel = {1.0, 1.0};
-        double[] rchannel = {2.0, 2.0};
-        SoundWave wave = new SoundWave(lchannel,rchannel);
-        wave = wave.highPassFilter(5,6);
-        double[] lchannel1 = wave.getLeftChannel();
-        Assert.assertArrayEquals(lchannel, lchannel1, 0.00001);
-        double[] rchannel1 = wave.getRightChannel();
-        Assert.assertArrayEquals(rchannel, rchannel1, 0.00001);
-    }
-
+//TODO: test high pass filter
 
     @Test
     public void addWaves() {
