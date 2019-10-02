@@ -1,10 +1,7 @@
 package ca.ubc.ece.cpen221.mp1;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import ca.ubc.ece.cpen221.mp1.utils.*;
 
 public class SoundWaveSimilarity {
 
@@ -56,7 +53,7 @@ public class SoundWaveSimilarity {
             nextPairIndex++;
         }
 
-        return getSet(w);
+        return findSetContaining(w);
 
     }
 
@@ -84,7 +81,7 @@ public class SoundWaveSimilarity {
     }
 
     //returns the set containing the given wave in the master set of all partitions
-    private Set<SoundWave> getSet (SoundWave wave) {
+    private Set<SoundWave> findSetContaining (SoundWave wave) {
 
         return null;
     }
