@@ -376,10 +376,10 @@ public class SoundWave implements HasSimilarity<SoundWave> {
 
     /**
      * Determine the similarity between this wave and another wave.
-     * The similarity metric, gamma, is the sum of squares of
-     * instantaneous differences.
+     * The similarity metric, gamma, is the inverse of one plus the sum of squares of
+     * instantaneous differences, with the other channel multiplied by a scaling factor to find the best fit.
      *
-     * algorithm proof: https://math.stackexchange.com/questions/1352726/minimizing-a-function-sum-of-squares
+     * algorithm maximizing proof: https://math.stackexchange.com/questions/1352726/minimizing-a-function-sum-of-squares
      *
      * @param other is not null.
      * @return the similarity between this wave and other.
@@ -393,23 +393,35 @@ public class SoundWave implements HasSimilarity<SoundWave> {
         double beta = Math.abs(this.average()/other.average());
         double residualSumOfSquares = 0;
 
-        int i;
-        for(i = 0; i < other.samples; i++){
-            residualSumOfSquares += Math.pow(lchannel.get(i) - beta * other.lchannel.get(i), 2);
-        }
-        for(;i < this.samples; i++){
-            residualSumOfSquares += Math.pow(lchannel.get(i), 2);
-        }
-
-        for(i = 0; i < other.samples; i++){
-            residualSumOfSquares += Math.pow(rchannel.get(i) - beta * other.rchannel.get(i), 2);
-        }
-        for(;i < this.samples; i++){
-            residualSumOfSquares += Math.pow(rchannel.get(i), 2);
-        }
+        residualSumOfSquares += getResidualSumOfSquares(this.lchannel, other.lchannel, beta);
+        residualSumOfSquares += getResidualSumOfSquares(this.rchannel, other.rchannel, beta);
 
     return 1 / (1 + residualSumOfSquares);
 
+    }
+
+    /**
+     * Calculates the residual sum of squares of values in two ArrayLists of doubles as the sum across all values of
+     * the value in channelOne minus beta multiplied by the value in channel two, all squared.
+     * @param channelOne the channel of "baseline values" to be subtracted from
+     * @param channelTwo the channel of secondary values, to be be subtracted. Must be shorter than or of equal length
+     *                   to channelOne
+     * @param beta a positive coefficient to scale channel two by
+     * @return the resultant similarity between zero and one
+     */
+    private static double getResidualSumOfSquares(ArrayList<Double> channelOne, ArrayList<Double> channelTwo, double beta){
+
+        double residualSumOfSquares=0;
+        int i;
+
+        for(i = 0; i < channelTwo.size(); i++){
+            residualSumOfSquares += Math.pow(channelOne.get(i) - beta * channelTwo.get(i), 2);
+        }
+        for(;i < channelOne.size(); i++){
+            residualSumOfSquares += Math.pow(channelOne.get(i), 2);
+        }
+
+        return residualSumOfSquares;
     }
 
     /**
