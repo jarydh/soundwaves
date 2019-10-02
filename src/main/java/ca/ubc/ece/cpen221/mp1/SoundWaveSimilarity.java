@@ -8,8 +8,8 @@ import ca.ubc.ece.cpen221.mp1.utils.*;
 
 public class SoundWaveSimilarity {
 
-    private Set<Set<SoundWave>> allPartitions = new HashSet<Set<SoundWave>>();
-    private List<WavePair> sortedPairs = new ArrayList<WavePair>();
+    private Set<Set<SoundWave>> allPartitions;
+    private List<WavePair> sortedPairs;
     private int numGroups;
     private SoundWave w;
 
@@ -48,7 +48,7 @@ public class SoundWaveSimilarity {
 
         int nextPairIndex = 0;
 
-        WavePair nextPair = new WavePair();
+        WavePair nextPair;
 
         while (allPartitions.size() > numGroups) {
             nextPair = sortedPairs.get(nextPairIndex);
