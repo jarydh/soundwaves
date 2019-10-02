@@ -1,10 +1,27 @@
 package ca.ubc.ece.cpen221.mp1;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import ca.ubc.ece.cpen221.mp1.utils.*;
 
 public class SoundWaveSimilarity {
+
+    private Set<Set<SoundWave>> allPartitions = new HashSet<Set<SoundWave>>();
+    private List<WavePair> sortedPairs = new ArrayList<WavePair>();
+    private int numGroups;
+    private SoundWave w;
+
+    //constructor
+    private SoundWaveSimilarity (Set<SoundWave> comparisonSet, int numGroups, SoundWave w){
+        this.numGroups = numGroups;
+        this.w = w;
+
+        this.allPartitions = createPartitions(comparisonSet);
+        this.sortedPairs = sortPairs(createPairs(comparisonSet));
+    }
+
 
     /**
      * Find the sound waves that w is most similar to from the waves in comparisonSet.
@@ -19,50 +36,57 @@ public class SoundWaveSimilarity {
      * @param w             is not null and is included in comparisonSet.
      * @return the set of waves that are in the same group as w after grouping.
      */
-    public Set<SoundWave> getSimilarWaves(Set<SoundWave> comparisonSet, int numGroups, SoundWave w) {
-        List<WavePair> sortedPairs = sortPairs(createPairs(comparisonSet));
+    public static Set<SoundWave> getSimilarWaves(Set<SoundWave> comparisonSet, int numGroups, SoundWave w) {
+
+        SoundWaveSimilarity operator = new SoundWaveSimilarity(comparisonSet, numGroups, w);
+        return operator.getSimilarWaves();
+
+    }
+
+    //get the set
+    private Set<SoundWave> getSimilarWaves(){
+
         int nextPairIndex = 0;
 
-        Set<Set<SoundWave>> allPartitions = createPartitions(comparisonSet);
+        WavePair nextPair = new WavePair();
 
         while (allPartitions.size() > numGroups) {
-            WavePair nextPair = sortedPairs.get(nextPairIndex);
-            allPartitions = mergePartitions(allPartitions, nextPair);
+            nextPair = sortedPairs.get(nextPairIndex);
+            mergePartitions(nextPair);
             nextPairIndex++;
         }
 
-        return getSet(allPartitions, w);
+        return getSet(w);
+
     }
 
     //Create a set containing all the possible pair combinations
-    public Set<WavePair> createPairs (Set<SoundWave> allWaves) {
-
-
+    private static Set<WavePair> createPairs (Set<SoundWave> allWaves) {
+        return null;
     }
 
     //sort the set with the pairs into an ordered list, from most similar to least similar
-    public List<WavePair> sortPairs (Set<WavePair> allPairs) {
+    private static List<WavePair> sortPairs (Set<WavePair> allPairs) {
 
-
+        return null;
     }
 
     //create a set containing partitions (sets) with one wave in each set
-    public Set<Set<SoundWave>> createPartitions (Set<SoundWave> allWaves) {
+    private static Set<Set<SoundWave>> createPartitions (Set<SoundWave> allWaves) {
 
-
+        return null;
     }
 
 
     //mergePartitions if the pair of waves are in different partitions
-    public Set<Set<SoundWave>> mergePartitions (Set<Set<SoundWave>> partitions, WavePair pair) {
-
+    private void mergePartitions (WavePair pair) {
 
     }
 
     //returns the set containing the given wave in the master set of all partitions
-    public Set<SoundWave> getSet (Set<Set<SoundWave>> partitions, SoundWave wave) {
+    private Set<SoundWave> getSet (SoundWave wave) {
 
-
+        return null;
     }
 
 }
