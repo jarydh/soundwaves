@@ -561,4 +561,17 @@ public class SoundWave implements HasSimilarity<SoundWave> {
         StdPlayer.playWave(lchannel, rchannel);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SoundWave soundWave = (SoundWave) o;
+        return lchannel.equals(soundWave.lchannel) &&
+                rchannel.equals(soundWave.rchannel);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(lchannel, rchannel);
+    }
 }

@@ -1,5 +1,6 @@
 package ca.ubc.ece.cpen221.mp1;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -57,9 +58,24 @@ public class SoundWaveSimilarity {
 
     }
 
-    //Create a set containing all the possible pair combinations
-    private static Set<WavePair> createPairs (Set<SoundWave> allWaves) {
-        return null;
+    /**
+     * generate a set of all possible wavePairs from the input set
+     * @param allWaves a non-empty set of the waves to be paired up
+     * @return a set of all possible wavePairs
+     */
+    static Set<WavePair> createPairs(Set<SoundWave> allWaves) {
+
+        Set<WavePair> allPairs = new HashSet<>();
+
+        for(SoundWave wave1 : allWaves){
+            for(SoundWave wave2 : allWaves){
+                if(!wave1.equals(wave2)) {
+                    allPairs.add(new WavePair(wave1, wave2));
+                }
+            }
+        }
+
+        return allPairs;
     }
 
     //sort the set with the pairs into an ordered list, from most similar to least similar

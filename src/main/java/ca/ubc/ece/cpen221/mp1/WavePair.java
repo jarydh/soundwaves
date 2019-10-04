@@ -1,5 +1,7 @@
 package ca.ubc.ece.cpen221.mp1;
 
+import java.util.Objects;
+
 public class WavePair implements Comparable{
     SoundWave wave1;
     SoundWave wave2;
@@ -29,5 +31,20 @@ public class WavePair implements Comparable{
         }
 
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WavePair p = (WavePair) o;
+
+        return ((wave1.equals(p.wave1) && wave2.equals(p.wave2)) || (wave1.equals(p.wave2) && wave2.equals(p.wave1)));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(similarity);
     }
 }
