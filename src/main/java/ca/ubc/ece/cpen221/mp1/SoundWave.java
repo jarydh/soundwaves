@@ -37,10 +37,10 @@ public class SoundWave implements HasSimilarity<SoundWave> {
         lchannel = clipVals(lchannel);
         rchannel = clipVals(rchannel);
 
-        for(double sample : lchannel) {
+        for (double sample : lchannel) {
             this.lchannel.add(sample);
         }
-        for(double sample : rchannel){
+        for (double sample : rchannel) {
             this.rchannel.add(sample);
         }
 
@@ -65,8 +65,8 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param duration  the duration of the sine wave, in seconds
      */
     public SoundWave(double freq, double phase, double amplitude, double duration) {
-        for(int i = 0; i < duration * SAMPLES_PER_SECOND; i++){
-            Double nextAmp = amplitude * Math.sin(freq * 2.0 * Math.PI * ((double) i / SAMPLES_PER_SECOND ) - phase );
+        for (int i = 0; i < duration * SAMPLES_PER_SECOND; i++) {
+            Double nextAmp = amplitude * Math.sin(freq * 2.0 * Math.PI * ((double) i / SAMPLES_PER_SECOND) - phase);
             lchannel.add(nextAmp);
             rchannel.add(nextAmp);
         }
@@ -124,7 +124,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
             double[] rchannel = StdPlayer.getRightChannel();
             sw.append(lchannel, rchannel);
         }
-        sw = sw.highPassFilter(10,2);
+        sw = sw.highPassFilter(10, 2);
         sw.sendToStereoSpeaker();
         StdPlayer.close();
     }
@@ -179,7 +179,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param other the wave to append.
      */
     public void append(SoundWave other) {
-        this.append(other.getLeftChannel(),other.getRightChannel());
+        this.append(other.getLeftChannel(), other.getRightChannel());
     }
 
     /**
@@ -194,9 +194,8 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     public SoundWave add(SoundWave other) {
         if (this.samples > other.samples) {
             return addWaves(this, other);
-        }
-        else {
-            return addWaves(other,this);
+        } else {
+            return addWaves(other, this);
         }
     }
 
@@ -211,7 +210,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @return a new soundwave with the amplitudes of both this wave
      * and the other wave added
      */
-    private SoundWave addWaves (SoundWave longerWave, SoundWave shorterWave) {
+    private SoundWave addWaves(SoundWave longerWave, SoundWave shorterWave) {
         double[] shorterLChannel = shorterWave.getLeftChannel();
         double[] shorterRChannel = shorterWave.getRightChannel();
 
@@ -238,7 +237,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      */
     public SoundWave addEcho(int delta, double alpha) {
         double[] zeros = new double[delta];
-        SoundWave echo = new SoundWave(zeros,zeros);
+        SoundWave echo = new SoundWave(zeros, zeros);
         echo.append(this);
         echo.scale(alpha);
 
@@ -253,14 +252,14 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param scalingFactor is a value > 0.
      */
     public void scale(double scalingFactor) {
-                double nextLeft;
-                double nextRight;
-                for (int i = 0; i < this.samples; i++) {
-                    nextLeft = this.lchannel.get(i) * scalingFactor;
-                    nextRight = this.rchannel.get(i) * scalingFactor;
+        double nextLeft;
+        double nextRight;
+        for (int i = 0; i < this.samples; i++) {
+            nextLeft = this.lchannel.get(i) * scalingFactor;
+            nextRight = this.rchannel.get(i) * scalingFactor;
 
-                    this.lchannel.set(i, clipVal(nextLeft));
-                    this.rchannel.set(i, clipVal(nextRight));
+            this.lchannel.set(i, clipVal(nextLeft));
+            this.rchannel.set(i, clipVal(nextRight));
         }
     }
 
@@ -272,12 +271,11 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @return a value between -1 and 1
      */
     private double clipVal(double val) {
-        if ( val > 1.0) {
+        if (val > 1.0) {
             return 1.0;
         } else if (val < -1.0) {
             return -1.0;
-        }
-        else {
+        } else {
             return val;
         }
     }
@@ -288,7 +286,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @param initVals is the array of numbers to be clipped.
      * @return an array of numbers with all values clipped
      */
-    private double[] clipVals (double[] initVals) {
+    private double[] clipVals(double[] initVals) {
         double[] newVals = new double[initVals.length];
         for (int i = 0; i < initVals.length; i++) {
             newVals[i] = clipVal(initVals[i]);
@@ -319,13 +317,13 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @return a new double array that is obtained by applying a high pass filter
      * to the original array
      */
-    private double[] filterChannel (double[] channel, double alpha){
+    private double[] filterChannel(double[] channel, double alpha) {
         double[] filterChannel = new double[channel.length];
 
         filterChannel[0] = channel[0];
 
         for (int i = 1; i < channel.length; i++) {
-            filterChannel[i] = alpha * filterChannel[i-1] + alpha * (channel[i] - channel[i-1]);
+            filterChannel[i] = alpha * filterChannel[i - 1] + alpha * (channel[i] - channel[i - 1]);
         }
 
         return filterChannel;
@@ -387,7 +385,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @return a map containing the xk values for each frequency after applying
      * a discrete Fourier transform to the wave.
      */
-    private Map<Integer, Double> DFT (double[] wave) {
+    private Map<Integer, Double> DFT(double[] wave) {
         int minFreq = 0;
         int maxFreq = wave.length;
         Map<Integer, Double> coefficients = new HashMap<Integer, Double>();
@@ -439,18 +437,18 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      */
     public boolean contains(SoundWave other) {
 
-        if (other.samples > this.samples){
+        if (other.samples > this.samples) {
             return false;
         }
 
         double scalingFactor;
 
-        for (int i = 0; i <= this.samples - other.samples; i++){
+        for (int i = 0; i <= this.samples - other.samples; i++) {
 
-            scalingFactor = this.lchannel.get(i)/other.lchannel.get(i);
+            scalingFactor = this.lchannel.get(i) / other.lchannel.get(i);
 
-            if(containsChannelFromIndex(i, this.lchannel, other.lchannel, scalingFactor)){
-                if(containsChannelFromIndex(i, this.rchannel, other.rchannel, scalingFactor)){
+            if (containsChannelFromIndex(i, this.lchannel, other.lchannel, scalingFactor)) {
+                if (containsChannelFromIndex(i, this.rchannel, other.rchannel, scalingFactor)) {
                     return true;
                 }
             }
@@ -460,14 +458,17 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     }
 
     /**
-     * Determine if one channel of a wave fully contains another channel of a wave starting from the passed index
+     * Determine if one channel of a wave fully contains another
+     * channel of a wave starting from the passed index
      *
-     * @param startingIndex the index to check as the start of the contained wave. Must be a valid index of channel,
-     *                      and must be less than the length of channel minus the length of containedSample.
+     * @param startingIndex the index to check as the start of the contained wave.
+     *                      Must be a valid index of channel, and must be less than
+     *                      the length of channel minus the length of containedSample.
      * @param channel the channel to be searched
      * @param containedSample the sample to be searched for within the other channel
-     * @return true if containedSample occurs fully in channel after amplitude scaling and starts
-     * at the given index, and false if the contained channel does not start at this index or is not contained
+     * @return true if containedSample occurs fully in channel
+     * after amplitude scaling and starts at the given index, and false if the
+     * contained channel does not start at this index or is not contained
      * with any possible scaling
      */
     private static Boolean containsChannelFromIndex(int startingIndex, ArrayList<Double> channel, ArrayList<Double> containedSample, double scalingFactor) {
@@ -495,38 +496,39 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      */
     public double similarity(SoundWave other) {
 
-        if (other.samples > this.samples){
+        if (other.samples > this.samples) {
             return other.similarity(this);
         }
 
-        double beta = Math.abs(this.average()/other.average());
+        double beta = Math.abs(this.average() / other.average());
         double residualSumOfSquares = 0;
 
         residualSumOfSquares += getResidualSumOfSquares(this.lchannel, other.lchannel, beta);
         residualSumOfSquares += getResidualSumOfSquares(this.rchannel, other.rchannel, beta);
 
-    return 1 / (1 + residualSumOfSquares);
+        return 1 / (1 + residualSumOfSquares);
 
     }
 
     /**
-     * Calculates the residual sum of squares of values in two ArrayLists of doubles as the sum across all values of
-     * the value in channelOne minus beta multiplied by the value in channel two, all squared.
+     * Calculates the residual sum of squares of values in two ArrayLists of
+     * doubles as the sum across all values of the value in channelOne minus
+     * beta multiplied by the value in channel two, all squared.
      * @param channelOne the channel of "baseline values" to be subtracted from
-     * @param channelTwo the channel of secondary values, to be be subtracted. Must be shorter than or of equal length
-     *                   to channelOne
+     * @param channelTwo the channel of secondary values, to be be subtracted.
+     *                   Must be shorter than or of equal length to channelOne
      * @param beta a positive coefficient to scale channel two by
      * @return the resultant similarity between zero and one
      */
-    private static double getResidualSumOfSquares(ArrayList<Double> channelOne, ArrayList<Double> channelTwo, double beta){
+    private static double getResidualSumOfSquares(ArrayList<Double> channelOne, ArrayList<Double> channelTwo, double beta) {
 
-        double residualSumOfSquares=0;
+        double residualSumOfSquares = 0;
         int i;
 
-        for(i = 0; i < channelTwo.size(); i++){
+        for (i = 0; i < channelTwo.size(); i++) {
             residualSumOfSquares += Math.pow(channelOne.get(i) - beta * channelTwo.get(i), 2);
         }
-        for(;i < channelOne.size(); i++){
+        for (; i < channelOne.size(); i++) {
             residualSumOfSquares += Math.pow(channelOne.get(i), 2);
         }
 
@@ -537,18 +539,18 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * computes the mean value of all samples from both channels
      * @return that average
      */
-    private double average(){
+    private double average() {
         double sum = 0;
 
-        for( double sample:lchannel){
+        for (double sample:lchannel) {
             sum += sample;
         }
 
-        for( double sample:rchannel){
+        for (double sample:rchannel) {
             sum += sample;
         }
 
-        return sum/this.samples;
+        return sum / this.samples;
     }
 
     /**
