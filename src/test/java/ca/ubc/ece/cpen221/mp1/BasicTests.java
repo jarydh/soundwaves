@@ -9,8 +9,8 @@ public class BasicTests {
 
     @Test
     public void testCreateWave() {
-        double[] lchannel = {1.0, 1.0};
-        double[] rchannel = {2.0, 2.0};
+        double[] lchannel = {-0.75, 1.0};
+        double[] rchannel = {0.5, 0.1};
         SoundWave wave = new SoundWave(lchannel, rchannel);
         double[] lchannel1 = wave.getLeftChannel();
         Assert.assertArrayEquals(lchannel, lchannel1, 0.00001);
@@ -48,8 +48,8 @@ public class BasicTests {
 
     @Test
     public void appendArrayToEmptyWave() {
-        double[] lchannel = {1.0, 1.0};
-        double[] rchannel = {2.0, 2.0};
+        double[] lchannel = {1.0, 0.4};
+        double[] rchannel = {0.6, -0.9};
         SoundWave wave = new SoundWave();
         wave.append(lchannel,rchannel);
         double[] lchannel1 = wave.getLeftChannel();
@@ -60,8 +60,8 @@ public class BasicTests {
 
     @Test
     public void appendEmptyArray() {
-        double[] lchannel = {1.0, 1.0};
-        double[] rchannel = {2.0, 2.0};
+        double[] lchannel = {1.0, 0};
+        double[] rchannel = {0.5, -0.9};
         double[] empty = {};
         SoundWave wave = new SoundWave(lchannel,rchannel);
         wave.append(empty, empty);
@@ -77,8 +77,8 @@ public class BasicTests {
         double[] rchannel1 = {2.0};
         double[] lchannel2 = {1.0, 2.0};
         double[] rchannel2 = {2.0, 1.0};
-        double[] lchannel = {1.0, 1.0, 2.0};
-        double[] rchannel = {2.0, 2.0, 1.0};
+        double[] lchannel = {1.0, 1.0, 1.0};
+        double[] rchannel = {1.0, 1.0, 1.0};
 
         SoundWave wave = new SoundWave(lchannel1,rchannel1);
         wave.append(lchannel2,rchannel2);
@@ -94,8 +94,8 @@ public class BasicTests {
         double[] rchannel1 = {2.0};
         double[] lchannel2 = {1.0, 2.0};
         double[] rchannel2 = {2.0, 1.0};
-        double[] lchannel = {1.0, 1.0, 2.0};
-        double[] rchannel = {2.0, 2.0, 1.0};
+        double[] lchannel = {1.0, 1.0, 1.0};
+        double[] rchannel = {1.0, 1.0, 1.0};
 
         SoundWave wave = new SoundWave(lchannel1,rchannel1);
         SoundWave wave2 = new SoundWave(lchannel2,rchannel2);
@@ -106,14 +106,12 @@ public class BasicTests {
         Assert.assertArrayEquals(rchannel, rchannel3, 0.00001);
     }
 
-//TODO: test high pass filter
-
     @Test
-    public void addWaves() {
-        double[] lchannel1 = {1.0};
-        double[] lchannel2 = {1.0, 2.0};
-
-
+    public void DFT() {
+        int freq = 300;
+        SoundWave wave = new SoundWave(freq, 0, 0.5, 0.3 );
+        double maxFreq = wave.highAmplitudeFreqComponent();
+        assertEquals(freq, maxFreq, 0.00001);
     }
 
     @Test

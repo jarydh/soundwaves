@@ -3,8 +3,7 @@ package ca.ubc.ece.cpen221.mp1;
 import ca.ubc.ece.cpen221.mp1.utils.HasSimilarity;
 import javazoom.jl.player.StdPlayer;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
+import java.util.*;
 
 public class SoundWave implements HasSimilarity<SoundWave> {
 
@@ -17,39 +16,43 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     // some representation fields that you could use
     private ArrayList<Double> lchannel = new ArrayList<>();
     private ArrayList<Double> rchannel = new ArrayList<>();
-    private int samples = 0;
+    private int samples;
 
     /**
      * Create a new SoundWave using the provided left and right channel
      * amplitude values. After the SoundWave is created, changes to the
      * provided arguments will not affect the SoundWave.
      *
-     * @param lchannel is not null, contains only values between -1 and 1, is the same size as rchannel, and represents the left channel.
-     * @param rchannel is not null, contains only values between -1 and 1, is the same size as lchannel and represents the right channel.
+     * The constructor will clip values that are not between -1 and 1.
+     * Anything less than -1 will be set to -1, anything greater than 1
+     * will be set to 1.
+     *
+     * The constructor will also add zeros to a channel if it is
+     * shorter than the other one so they both are the same length.
+     *
+     * @param lchannel is not null and represents the left channel.
+     * @param rchannel is not null and represents the right channel.
      */
     public SoundWave(double[] lchannel, double[] rchannel) {
+        lchannel = clipVals(lchannel);
+        rchannel = clipVals(rchannel);
+
         for(double sample : lchannel){
             this.lchannel.add(sample);
         }
         for(double sample : rchannel){
             this.rchannel.add(sample);
         }
+        makeEqualLength();
 
         updateSamples();
-
-        // TODO: Potentially find a method
-        // TODO: check if inputs need to be checked
-        // TODO: Implement this constructor
-
     }
 
     /**
      * Creates an empty soundwave
      */
     public SoundWave() {
-
-        // TODO: You should implement a default constructor
-        // that creates an empty wave
+        updateSamples();
     }
 
     /**
@@ -67,8 +70,8 @@ public class SoundWave implements HasSimilarity<SoundWave> {
             lchannel.add(nextAmp);
             rchannel.add(nextAmp);
         }
-        this.samples = (int) duration * SAMPLES_PER_SECOND;
-        // TODO: add or subtract phase?
+        this.samples = (int) (duration * SAMPLES_PER_SECOND);
+
     }
 
     /**
@@ -127,12 +130,16 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     }
 
     /**
-     * Append a wave to this wave.
+     * Append a wave to this wave. Values not between
+     * -1 and 1 are clipped.
      *
-     * @param lchannel
-     * @param rchannel
+     * @param lchannel left channel to append
+     * @param rchannel right channel to append
      */
     public void append(double[] lchannel, double[] rchannel) {
+        lchannel = clipVals(lchannel);
+        rchannel = clipVals(rchannel);
+
         for (int i = 0; i < lchannel.length; i++) {
             this.lchannel.add(lchannel[i]);
             this.rchannel.add(rchannel[i]);
@@ -148,6 +155,25 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     public void updateSamples() {
         this.samples = this.lchannel.size();
     }
+
+    /**
+     * Adds extra 0's to the end of a channel if it
+     * is shorter than the other one
+     *
+     * @modifies lchannel and rchannel
+     */
+    private void makeEqualLength() {
+        while (lchannel.size() < rchannel.size()) {
+            lchannel.add(0.0);
+        }
+
+        while (rchannel.size() < lchannel.size()) {
+            rchannel.add(0.0);
+        }
+
+        return;
+    }
+
 
     /**
      * Append a wave to this wave.
@@ -199,6 +225,9 @@ public class SoundWave implements HasSimilarity<SoundWave> {
             addedRChannel[i] = addedRChannel[i] + shorterRChannel[i];
         }
 
+        addedLChannel = clipVals(addedLChannel);
+        addedRChannel = clipVals(addedRChannel);
+
         return new SoundWave(addedLChannel, addedRChannel);
     }
 
@@ -213,7 +242,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
         double[] zeros = new double[delta];
         SoundWave echo = new SoundWave(zeros,zeros);
         echo.append(this);
-        echo.scaleNoClip(alpha);
+        echo.scale(alpha);
 
         SoundWave newWave = this.add(echo);
 
@@ -234,8 +263,8 @@ public class SoundWave implements HasSimilarity<SoundWave> {
                     nextLeft = this.lchannel.get(i) * scalingFactor;
                     nextRight = this.rchannel.get(i) * scalingFactor;
 
-            this.lchannel.set(i, clipVal(nextLeft));
-            this.rchannel.set(i, clipVal(nextRight));
+                    this.lchannel.set(i, clipVal(nextLeft));
+                    this.rchannel.set(i, clipVal(nextRight));
         }
     }
 
@@ -258,16 +287,18 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     }
 
     /**
-     * Scale the amplitude of this wave by a scaling factor.
-     * Does not clip values
+     * Clips all the values to make sure they fall between -1 and 1
      *
-     * @param scalingFactor is a value > 0.
+     * @param initVals is the array of numbers to be clipped.
+     * @return an array of numbers with all values clipped
      */
-    private void scaleNoClip (double scalingFactor) {
-        for (int i = 0; i < this.samples; i++) {
-            this.lchannel.set(i, this.lchannel.get(i) * scalingFactor);
-            this.rchannel.set(i, this.rchannel.get(i) * scalingFactor);
+    private double[] clipVals (double[] initVals) {
+        double[] newVals = new double[initVals.length];
+        for (int i = 0; i < initVals.length; i++) {
+            newVals[i] = clipVal(initVals[i]);
         }
+
+        return newVals;
     }
 
     /**
@@ -311,13 +342,97 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * contribution to this wave. This component is obtained by applying the
      * Discrete Fourier Transform to this wave.
      *
+     * If the combined channels of the wave is all zeros, return frequency
+     * of 0.0.
+     *
+     * @precondition lchannel and rchannel are the same length.
      * @return the frequency of the wave component of highest amplitude.
      * If more than one frequency has the same amplitude contribution then
      * return the higher frequency.
      */
     public double highAmplitudeFreqComponent() {
-        // TODO: Implement this method
-        return -1; // change this
+        double [] combined = new double[this.samples];
+        double maxFreq = 0;
+        double maxCoefficient = 0;
+        boolean allZeros = true;
+
+
+        for (int i = 0; i < this.samples; i++) {
+            combined[i] = lchannel.get(i) / 2.0 + rchannel.get(i) / 2.0;
+
+            if (combined[i] != 0) {
+                allZeros = false;
+            }
+        }
+
+        if (allZeros) {
+            return 0.0;
+        }
+
+        Map<Integer, Double> coefficients = DFT(combined);
+
+        for (Integer nextFreq: coefficients.keySet()) {
+            if (coefficients.get(nextFreq) - maxCoefficient > -0.001) {
+                maxCoefficient = coefficients.get(nextFreq);
+                maxFreq = nextFreq;
+            }
+        }
+
+        return maxFreq;
+    }
+
+
+    /**
+     * Applies a discrete Fourier transform to the wave, then returns a map
+     * containing the xk values (coefficient of Fourier transform) for each frequency.
+     *
+     * The range of frequencies tested goes from 0Hz to the number of samples in the wave.
+     *
+     * @param wave is an array representing the combined channels of a
+     *             soundwave. Wave is not all zeros.
+     * @return a map containing the xk values for each frequency after applying
+     * a discrete Fourier transform to the wave.
+     */
+    public Map<Integer, Double> DFT (double[] wave) {
+        int minFreq = 0;
+        int maxFreq = wave.length;
+        Map<Integer, Double> coefficients = new HashMap<Integer, Double>();
+
+        for (int freq = minFreq; freq <= maxFreq; freq++) {
+            coefficients.put(freq, getCoefficient(freq, wave));
+        }
+
+
+        return coefficients;
+    }
+
+    /**
+     * Calculates the coefficient of a DFT for the given frequency,
+     * which is a complex number. Returns the amplitude of this number.
+     *
+     * @param k is the frequency to be used in the DFT
+     * @param wave is an array representing the combined channels of a
+     *             soundwave. Wave is not all zeros.
+     * @return the amplitude of the coefficient for the term with
+     * given frequency for the DFT on the wave.
+     */
+    public double getCoefficient(double k, double[] wave) {
+        int N = wave.length;
+        ComplexNumber sum = new ComplexNumber();
+        ComplexNumber nextSum;
+        double real;
+        double imaginary;
+
+        for (int i = 0; i < N; i++) {
+            double t = (double) i / (double) SAMPLES_PER_SECOND;
+            real = wave[i] * Math.cos(2.0 * Math.PI * k * t);
+            imaginary = wave[i] * Math.sin(2.0 * Math.PI * k * t) * (-1.0);
+
+            nextSum = new ComplexNumber(real, imaginary);
+            sum.add(nextSum);
+        }
+
+        return sum.getAmplitude();
     }
 
     /**
