@@ -37,14 +37,14 @@ public class SoundWave implements HasSimilarity<SoundWave> {
         lchannel = clipVals(lchannel);
         rchannel = clipVals(rchannel);
 
-        for(double sample : lchannel){
+        for(double sample : lchannel) {
             this.lchannel.add(sample);
         }
         for(double sample : rchannel){
             this.rchannel.add(sample);
         }
-        makeEqualLength();
 
+        makeEqualLength();
         updateSamples();
     }
 
@@ -144,15 +144,15 @@ public class SoundWave implements HasSimilarity<SoundWave> {
             this.lchannel.add(lchannel[i]);
             this.rchannel.add(rchannel[i]);
         }
+        makeEqualLength();
         updateSamples();
-        return;
     }
 
     /**
      * Updates the field samples
      *
      */
-    public void updateSamples() {
+    private void updateSamples() {
         this.samples = this.lchannel.size();
     }
 
@@ -160,7 +160,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * Adds extra 0's to the end of a channel if it
      * is shorter than the other one
      *
-     * @modifies lchannel and rchannel
+     * Modifies lchannel and rchannel
      */
     private void makeEqualLength() {
         while (lchannel.size() < rchannel.size()) {
@@ -170,8 +170,6 @@ public class SoundWave implements HasSimilarity<SoundWave> {
         while (rchannel.size() < lchannel.size()) {
             rchannel.add(0.0);
         }
-
-        return;
     }
 
 
@@ -244,9 +242,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
         echo.append(this);
         echo.scale(alpha);
 
-        SoundWave newWave = this.add(echo);
-
-        return newWave;
+        return this.add(echo);
     }
 
     /**
@@ -311,9 +307,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      */
     public SoundWave highPassFilter(int dt, double RC) {
         double alpha = RC / (RC + dt);
-        SoundWave filtered = new SoundWave(filterChannel(getLeftChannel(), alpha), filterChannel(getRightChannel(), alpha));
-
-        return filtered;
+        return new SoundWave(filterChannel(getLeftChannel(), alpha), filterChannel(getRightChannel(), alpha));
     }
 
     /**
@@ -344,8 +338,8 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      *
      * If the combined channels of the wave is all zeros, return frequency
      * of 0.0.
+     * Precondition: lchannel and rchannel are the same length.
      *
-     * @precondition lchannel and rchannel are the same length.
      * @return the frequency of the wave component of highest amplitude.
      * If more than one frequency has the same amplitude contribution then
      * return the higher frequency.
@@ -393,7 +387,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @return a map containing the xk values for each frequency after applying
      * a discrete Fourier transform to the wave.
      */
-    public Map<Integer, Double> DFT (double[] wave) {
+    private Map<Integer, Double> DFT (double[] wave) {
         int minFreq = 0;
         int maxFreq = wave.length;
         Map<Integer, Double> coefficients = new HashMap<Integer, Double>();
@@ -416,7 +410,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * @return the amplitude of the coefficient for the term with
      * given frequency for the DFT on the wave.
      */
-    public double getCoefficient(double k, double[] wave) {
+    private double getCoefficient(double k, double[] wave) {
         int N = wave.length;
         ComplexNumber sum = new ComplexNumber();
         ComplexNumber nextSum;
