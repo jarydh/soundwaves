@@ -27,4 +27,10 @@ public class QualitativeTests {
         sw.sendToStereoSpeaker();
         StdPlayer.close();
     }
+
+    @Test
+    public void groupClips () {
+
+
+    }
 }
