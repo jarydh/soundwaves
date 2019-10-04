@@ -1,7 +1,6 @@
 package ca.ubc.ece.cpen221.mp1;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SoundWaveSimilarity {
 
@@ -74,10 +73,24 @@ public class SoundWaveSimilarity {
         return null;
     }
 
-    //create a set containing partitions (sets) with one wave in each set
-    private static Set<Set<SoundWave>> createPartitions (Set<SoundWave> allWaves) {
 
-        return null;
+    /**
+     * Create a set containing partitions (sets) with one wave in each partition
+     *
+     * @param allWaves a set containing all the waves to be put into partitions
+     * @return a set containing partitions (sets) with one wave in each partition
+     */
+    private static Set<Set<SoundWave>> createPartitions (Set<SoundWave> allWaves) {
+        Set<Set<SoundWave>> allPartitions = new HashSet<Set<SoundWave>>();
+        Set<SoundWave> nextPartition;
+
+        for (SoundWave nextWave: allWaves) {
+            nextPartition = new HashSet<SoundWave>();
+            nextPartition.add(nextWave);
+            allPartitions.add(nextPartition);
+        }
+
+        return allPartitions;
     }
 
 
