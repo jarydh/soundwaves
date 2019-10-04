@@ -5,7 +5,6 @@ import javazoom.jl.player.StdPlayer;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.*;
 
 public class SoundWave implements HasSimilarity<SoundWave> {
 
@@ -68,7 +67,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
             lchannel.add(nextAmp);
             rchannel.add(nextAmp);
         }
-        this.samples = (int) (duration * SAMPLES_PER_SECOND);
+        this.samples = (int) duration * SAMPLES_PER_SECOND;
         // TODO: add or subtract phase?
     }
 
@@ -312,97 +311,13 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * contribution to this wave. This component is obtained by applying the
      * Discrete Fourier Transform to this wave.
      *
-     * If the combined channels of the wave is all zeros, return frequency
-     * of 0.0.
-     *
-     * @precondition lchannel and rchannel are the same length.
      * @return the frequency of the wave component of highest amplitude.
      * If more than one frequency has the same amplitude contribution then
      * return the higher frequency.
      */
     public double highAmplitudeFreqComponent() {
-        double [] combined = new double[this.samples];
-        double maxFreq = 0;
-        double maxCoefficient = 0;
-        boolean allZeros = true;
-
-
-        for (int i = 0; i < this.samples; i++) {
-            combined[i] = lchannel.get(i) / 2.0 + rchannel.get(i) / 2.0;
-
-            if (combined[i] != 0) {
-                allZeros = false;
-            }
-        }
-
-        if (allZeros) {
-            return 0.0;
-        }
-
-        Map<Integer, Double> coefficients = DFT(combined);
-
-        for (Integer nextFreq: coefficients.keySet()) {
-            if (coefficients.get(nextFreq) - maxCoefficient > -0.001) {
-                maxCoefficient = coefficients.get(nextFreq);
-                maxFreq = nextFreq;
-            }
-        }
-
-        return maxFreq;
-    }
-
-
-    /**
-     * Applies a discrete Fourier transform to the wave, then returns a map
-     * containing the xk values (coefficient of Fourier transform) for each frequency.
-     *
-     * The range of frequencies tested goes from 0Hz to the number of samples in the wave.
-     *
-     * @param wave is an array representing the combined channels of a
-     *             soundwave. Wave is not all zeros.
-     * @return a map containing the xk values for each frequency after applying
-     * a discrete Fourier transform to the wave.
-     */
-    public Map<Integer, Double> DFT (double[] wave) {
-        int minFreq = 0;
-        int maxFreq = wave.length;
-        Map<Integer, Double> coefficients = new HashMap<Integer, Double>();
-
-        for (int freq = minFreq; freq <= maxFreq; freq++) {
-            coefficients.put(freq, getCoefficient(freq, wave));
-        }
-
-
-        return coefficients;
-    }
-
-    /**
-     * Calculates the coefficient of a DFT for the given frequency,
-     * which is a complex number. Returns the amplitude of this number.
-     *
-     * @param k is the frequency to be used in the DFT
-     * @param wave is an array representing the combined channels of a
-     *             soundwave. Wave is not all zeros.
-     * @return the amplitude of the coefficient for the term with
-     * given frequency for the DFT on the wave.
-     */
-    public double getCoefficient(double k, double[] wave) {
-        int N = wave.length;
-        ComplexNumber sum = new ComplexNumber();
-        ComplexNumber nextSum;
-        double real;
-        double imaginary;
-
-        for (int i = 0; i < N; i++) {
-            double t = (double) i / (double) SAMPLES_PER_SECOND;
-            real = wave[i] * Math.cos(2.0 * Math.PI * k * t);
-            imaginary = wave[i] * Math.sin(2.0 * Math.PI * k * t) * (-1.0);
-
-            nextSum = new ComplexNumber(real, imaginary);
-            sum.add(nextSum);
-        }
-
-        return sum.getAmplitude();
+        // TODO: Implement this method
+        return -1; // change this
     }
 
     /**
