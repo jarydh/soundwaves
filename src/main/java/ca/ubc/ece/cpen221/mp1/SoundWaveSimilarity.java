@@ -86,10 +86,23 @@ public class SoundWaveSimilarity {
 
     }
 
-    //returns the set containing the given wave in the master set of all partitions
-    private Set<SoundWave> findSetContaining (SoundWave wave) {
+    /**
+     * Returns the set containing the given wave in the master set of
+     * all partitions. Throws IllegalArgumentException if the wave is not found.
+     *
+     * @param wave wave to search for, assumes wave should be found in at least one
+     *             of the partitions.
+     * @return a set of soundwaves containing the given wave,
+     * found in the master set of all partitions
+     */
+    private Set<SoundWave> findSetContaining (SoundWave wave) throws IllegalArgumentException {
+        for (Set<SoundWave> nextPartition : allPartitions) {
+            if (nextPartition.contains(wave)) {
+                return nextPartition;
+            }
+        }
 
-        return null;
+        throw new IllegalArgumentException();
     }
 
 }
