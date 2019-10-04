@@ -1,5 +1,7 @@
 package ca.ubc.ece.cpen221.mp1;
 
+import javax.net.ssl.SSLEngineResult;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class SoundWaveSimilarity {
@@ -94,9 +96,27 @@ public class SoundWaveSimilarity {
     }
 
 
-    //mergePartitions if the pair of waves are in different partitions
+    /**
+     * Checks the set containing all partitions to see which partitions
+     * the given waves are in. If they are in different partitions, merge
+     * the partitions. If they are in the same partition, do nothing.
+     *
+     * Modifies allPartitions
+     *
+     * @param pair the pair of waves to be merged
+     */
     private void mergePartitions (WavePair pair) {
+        Set<SoundWave> set1 = findSetContaining(pair.wave1);
+        Set<SoundWave> set2 = findSetContaining(pair.wave2);
 
+        if (!set1.equals(set2)) {
+            Set<SoundWave> newSet = new HashSet<SoundWave>(set1);
+            newSet.addAll(set2);
+
+            allPartitions.remove(set1);
+            allPartitions.remove(set2);
+            allPartitions.add(newSet);
+        }
     }
 
     /**
