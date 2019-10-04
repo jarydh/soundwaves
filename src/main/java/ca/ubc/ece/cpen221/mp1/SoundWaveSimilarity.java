@@ -40,7 +40,13 @@ public class SoundWaveSimilarity {
 
     }
 
-    //get the set
+    /** Merges partitions containing the soundwave pairs until the
+     * required number of partitions is met. Modifies the set containing
+     * all the partitions.
+     *
+     * @return returns the set of soundwaves which contains
+     * the wave w that is being searched for.
+     */
     private Set<SoundWave> getSimilarWaves(){
 
         int nextPairIndex = 0;
