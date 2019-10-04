@@ -1,7 +1,5 @@
 package ca.ubc.ece.cpen221.mp1;
 
-import javax.net.ssl.SSLEngineResult;
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class SoundWaveSimilarity {
@@ -11,7 +9,16 @@ public class SoundWaveSimilarity {
     private int numGroups;
     private SoundWave w;
 
-    //constructor
+    /**
+     * Creates a new object for grouping clips and then finding the set containing
+     * the specified wave. Modifies numGroups, the wave to search for, allPartitions
+     * and sortedPairs.
+     *
+     * @param comparisonSet set containing all waves to compare, not null
+     * @param numGroups target number of partitions to end up with,
+     *                  between 1 and comparison set
+     * @param w wave to search for, not null and included in comparison set
+     */
     private SoundWaveSimilarity (Set<SoundWave> comparisonSet, int numGroups, SoundWave w){
         this.numGroups = numGroups;
         this.w = w;
