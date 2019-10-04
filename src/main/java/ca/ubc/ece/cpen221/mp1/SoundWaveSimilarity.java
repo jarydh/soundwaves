@@ -19,7 +19,7 @@ public class SoundWaveSimilarity {
      *                  between 1 and comparison set
      * @param w wave to search for, not null and included in comparison set
      */
-    private SoundWaveSimilarity (Set<SoundWave> comparisonSet, int numGroups, SoundWave w){
+    private SoundWaveSimilarity (Set<SoundWave> comparisonSet, int numGroups, SoundWave w) {
         this.numGroups = numGroups;
         this.w = w;
 
@@ -42,10 +42,8 @@ public class SoundWaveSimilarity {
      * @return the set of waves that are in the same group as w after grouping.
      */
     public static Set<SoundWave> getSimilarWaves(Set<SoundWave> comparisonSet, int numGroups, SoundWave w) {
-
         SoundWaveSimilarity operator = new SoundWaveSimilarity(comparisonSet, numGroups, w);
         return operator.getSimilarWaves();
-
     }
 
     /** Merges partitions containing the soundwave pairs until the
@@ -56,9 +54,7 @@ public class SoundWaveSimilarity {
      * the wave w that is being searched for.
      */
     private Set<SoundWave> getSimilarWaves(){
-
         int nextPairIndex = 0;
-
         WavePair nextPair;
 
         while (allPartitions.size() > numGroups) {
@@ -68,7 +64,6 @@ public class SoundWaveSimilarity {
         }
 
         return findSetContaining(w);
-
     }
 
     /**
@@ -77,7 +72,6 @@ public class SoundWaveSimilarity {
      * @return a set of all possible wavePairs
      */
     static Set<WavePair> createPairs(Set<SoundWave> allWaves) {
-
         Set<WavePair> allPairs = new HashSet<>();
 
         for(SoundWave wave1 : allWaves){
