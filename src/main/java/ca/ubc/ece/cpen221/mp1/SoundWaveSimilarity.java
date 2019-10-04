@@ -69,10 +69,20 @@ public class SoundWaveSimilarity {
         return null;
     }
 
-    //sort the set with the pairs into an ordered list, from most similar to least similar
+    /**
+     * Sorts the set containing all pairs of waves into an ordered list,
+     * from most similar to least similar. Uses the defined compareTo
+     * method defined in wavePair, which sorts by similarity.
+     *
+     * @param allPairs set of all possible wave pairs
+     * @return a list of wave pairs sorted in order from most similar to least
+     * similar.
+     */
     private static List<WavePair> sortPairs (Set<WavePair> allPairs) {
+        List<WavePair> sortedPairs = new ArrayList<WavePair>(allPairs);
+        Collections.sort(sortedPairs);
 
-        return null;
+        return sortedPairs;
     }
 
 
