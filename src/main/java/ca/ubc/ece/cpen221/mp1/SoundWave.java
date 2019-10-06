@@ -488,68 +488,127 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * The similarity metric, gamma, is the inverse of one plus the sum of squares of
      * instantaneous differences, with the other channel multiplied by a scaling factor to find the best fit.
      *
-     * algorithm maximizing proof: https://math.stackexchange.com/questions/1352726/minimizing-a-function-sum-of-squares
+     * This method returns the average gamma between each wave being multiplied by the optimal scaling factor,
+     * and so is symmetric
      *
      * @param other is not null.
-     * @return the similarity between this wave and other.
+     * @return the symmetric similarity between this wave and other between 0 and 1.
      */
     public double similarity(SoundWave other) {
+        return (asymmetricSimilarity(this, other) + asymmetricSimilarity(other, this) / 2);
+    }
 
-        if (other.samples > this.samples){
-            return other.similarity(this);
-        }
+    /**
+     * Determine the ordered similarity between this wave and another wave.
+     * The similarity metric, gamma, is the inverse of one plus the sum of squares of
+     * instantaneous differences, with the other channel multiplied by a scaling factor to find the best fit.
+     *
+     * @param primary is not null.
+     * @param secondary is not null. The wave to be multiplied by the scaling factor
+     * @return gamma, the similarity between this wave and other between 0 and 1.
+     */
+    public static double asymmetricSimilarity(SoundWave primary, SoundWave secondary){
 
-        double beta = Math.abs(this.average()/other.average());
+        double beta = getBeta(primary, secondary);
         double residualSumOfSquares = 0;
 
-        residualSumOfSquares += getResidualSumOfSquares(this.lchannel, other.lchannel, beta);
-        residualSumOfSquares += getResidualSumOfSquares(this.rchannel, other.rchannel, beta);
+        residualSumOfSquares += getResidualSumOfSquares(primary.lchannel, secondary.lchannel, beta);
+        residualSumOfSquares += getResidualSumOfSquares(primary.rchannel, secondary.rchannel, beta);
 
-    return 1 / (1 + residualSumOfSquares);
+        return 1 / (1 + residualSumOfSquares);
+
+    }
+
+    /**
+     * Find the value to multiply secondary by which minimizes the residual sum of squares
+     *
+     * This is accomplished by simplifying the scaled residual sum of squares equation into
+     * a quadratic equation which will always have a positive coefficient on the quadratic term
+     *
+     * @param primary the wave being subtracted from
+     * @param secondary the wave being subtracted
+     * @return a positive scaling factor
+     */
+
+    private static double getBeta(SoundWave primary, SoundWave secondary) {
+        double a = 0;
+
+        for (int i = 0; i < secondary.samples; i++){
+            a += Math.pow(secondary.lchannel.get(i), 2) + (Math.pow(secondary.rchannel.get(i), 2));
+        }
+
+        double b = 0;
+
+        for (int i = 0; i < primary.samples && i < secondary.samples; i++) {
+            b += primary.rchannel.get(i) * secondary.rchannel.get(i);
+            b += primary.lchannel.get(i) * secondary.lchannel.get(i);
+        }
+        b *= -2;
+
+//        double c = 0;
+//
+//        for (int i =0; i < primary.samples; i++){
+//            c += Math.pow(primary.lchannel.get(i), 2) + (Math.pow(primary.rchannel.get(i), 2));
+//        }
+
+        if (-b / (2 * a) > 0) {
+            return -b / (2 * a);
+        }else{
+            return 0;
+        }
 
     }
 
     /**
      * Calculates the residual sum of squares of values in two ArrayLists of doubles as the sum across all values of
-     * the value in channelOne minus beta multiplied by the value in channel two, all squared.
-     * @param channelOne the channel of "baseline values" to be subtracted from
-     * @param channelTwo the channel of secondary values, to be be subtracted. Must be shorter than or of equal length
-     *                   to channelOne
-     * @param beta a positive coefficient to scale channel two by
-     * @return the resultant similarity between zero and one
+     * the value in primaryChannel minus beta multiplied by the value in channel two, all squared.
+     * @param primaryChannel the channel of "baseline values" to be subtracted from
+     * @param secondaryChannel the channel of secondary values, to be  multiplied by beta subtracted.
+     * @param beta a positive coefficient to scale channel two.
+     * @return the resultant residual sum of squares
      */
-    private static double getResidualSumOfSquares(ArrayList<Double> channelOne, ArrayList<Double> channelTwo, double beta){
+    private static double getResidualSumOfSquares(ArrayList<Double> primaryChannel, ArrayList<Double> secondaryChannel, double beta){
 
-        double residualSumOfSquares=0;
+        double residualSumOfSquares = 0;
         int i;
 
-        for(i = 0; i < channelTwo.size(); i++){
-            residualSumOfSquares += Math.pow(channelOne.get(i) - beta * channelTwo.get(i), 2);
+
+        for (i = 0; i < primaryChannel.size() && i < secondaryChannel.size(); i++){
+            residualSumOfSquares += Math.pow(primaryChannel.get(i) - beta * secondaryChannel.get(i), 2);
         }
-        for(;i < channelOne.size(); i++){
-            residualSumOfSquares += Math.pow(channelOne.get(i), 2);
+
+        if (primaryChannel.size() > secondaryChannel.size()) {
+            for (; i < primaryChannel.size(); i++) {
+                residualSumOfSquares += Math.pow(primaryChannel.get(i), 2);
+            }
+        }else if (primaryChannel.size() < secondaryChannel.size()){
+            for (; i < secondaryChannel.size(); i++) {
+                residualSumOfSquares += Math.pow(beta * secondaryChannel.get(i), 2);
+            }
         }
 
         return residualSumOfSquares;
     }
 
-    /**
-     * computes the mean value of all samples from both channels
-     * @return that average
-     */
-    private double average(){
-        double sum = 0;
 
-        for( double sample:lchannel){
-            sum += sample;
-        }
-
-        for( double sample:rchannel){
-            sum += sample;
-        }
-
-        return sum/this.samples;
-    }
+    //TODO:remove
+//    /**
+//     * computes the mean value of all samples from both channels
+//     * @return that average
+//     */
+//    private double average(){
+//        double sum = 0;
+//
+//        for( double sample:lchannel){
+//            sum += sample;
+//        }
+//
+//        for( double sample:rchannel){
+//            sum += sample;
+//        }
+//
+//        return sum/this.samples;
+//    }
 
     /**
      * Play this wave on the standard stereo device.
