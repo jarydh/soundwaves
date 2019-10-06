@@ -165,9 +165,9 @@ public class BasicTests {
     @Test
     public void testSimilarity2() {
         SoundWave wave = new SoundWave (new double[]{1, 0.2, 0.3, 0.4, 0.5}, new double[]{0.3, 0.9, 0.7, 0.13, 0.15});
-        SoundWave wave2 = new SoundWave(new double[]{0.5, 0.1, 0.15},new double[]{0.15, 0.45, 0.35});
+        SoundWave wave2 = new SoundWave(new double[]{0.5, 0.1, 0.15}, new double[]{0.15, 0.45, 0.35});
 
-        assertTrue(wave.similarity(wave2) < 0.8);
+        assertTrue(wave.similarity(wave2) > 0.5);
     }
 
     @Test
@@ -184,6 +184,14 @@ public class BasicTests {
         SoundWave wave2 = new SoundWave(440, Math.PI/2,1,3);
         System.out.println(wave.similarity(wave2));
         assertTrue(wave.similarity(wave2) < 0.001);
+    }
+
+    @Test
+    public void testSimilarity5() {
+        SoundWave wave = new SoundWave (new double[]{0.9, 0.9, 0.9,}, new double[]{0.9, 0.9, 0.9});
+        SoundWave wave2 = new SoundWave(new double[]{-0.9, -0.9, -0.9,}, new double[]{-0.9, -0.9, -0.9}); //beta < 0
+        System.out.println(wave.similarity(wave2));
+        assertEquals(wave.similarity(wave2), 1 / (1 + 0.9 * 0.9 * 6), 0.001);
     }
 
 }
