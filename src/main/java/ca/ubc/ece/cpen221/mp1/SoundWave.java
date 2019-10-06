@@ -229,7 +229,8 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     }
 
     /**
-     * Create a new wave by adding an echo to this wave.
+     * Create a new wave by adding an echo to this wave. Will clip values
+     * above 1 and below -1.
      *
      * @param delta > 0. delta is the lag between this wave and the echo wave.
      * @param alpha is the damping factor applied to the echo wave, 0 < alpha <= 1.

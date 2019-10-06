@@ -23,11 +23,11 @@ public class ComplexNumber {
         return Math.sqrt(Math.pow(this.imaginary, 2) + Math.pow(this.real, 2));
     }
 
-    public double getReal() {
-        return real;
-    }
-    public double getImaginary() {
-        return  imaginary;
-    }
+//    public double getReal() {
+//        return real;
+//    }
+//    public double getImaginary() {
+//        return  imaginary;
+//    }
 
 }

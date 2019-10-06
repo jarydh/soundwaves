@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 public class BasicTests {
 
+    //Creates a wave with an array of doubles
     @Test
     public void testCreateWave() {
         double[] lchannel = {-0.75, 1.0};
@@ -28,6 +29,23 @@ public class BasicTests {
         Assert.assertArrayEquals(rchannel, rchannel1, 0.00001);
     }
 
+    //Tests the make equal length method
+    @Test
+    public void unequalCreateWave() {
+        double[] shortWave = {0.1, 0.5, 0.7};
+        double[] longWave = {0, 0.4, 0.2, 0.6, 0.8, 0.5};
+        double[] shortWaveZeros = {0.1, 0.5, 0.7, 0, 0, 0};
+
+        SoundWave wave = new SoundWave(shortWave, longWave);
+        SoundWave expected = new SoundWave(shortWaveZeros, longWave);
+        Assert.assertArrayEquals(wave.getLeftChannel(), expected.getLeftChannel(), 0.00001);
+
+        wave = new SoundWave(longWave, shortWave);
+        expected = new SoundWave(longWave, shortWaveZeros);
+        Assert.assertArrayEquals(wave.getRightChannel(), expected.getRightChannel(), 0.00001);
+    }
+
+    //creates a sin wave with no offest
     @Test
     public void testCreateSineWaveNoOffset() {
         SoundWave wave = new SoundWave(1, 0, 0.65, 1 );
@@ -37,6 +55,7 @@ public class BasicTests {
         assertEquals(0.65, rchannel[44100/4], 0.00001);
     }
 
+    //creates a sin wave with offset
     @Test
     public void testCreateSineWaveWithOffset() {
         SoundWave wave = new SoundWave(1, Math.PI/2, 0.5, 1 );
@@ -46,6 +65,8 @@ public class BasicTests {
         assertEquals(0.5, rchannel[44100/2], 0.00001);
     }
 
+
+    //test append method to append to an empty wave
     @Test
     public void appendArrayToEmptyWave() {
         double[] lchannel = {1.0, 0.4};
@@ -58,6 +79,8 @@ public class BasicTests {
         Assert.assertArrayEquals(rchannel, rchannel1, 0.00001);
     }
 
+
+    //tests append method by passing it an empty array
     @Test
     public void appendEmptyArray() {
         double[] lchannel = {1.0, 0};
@@ -71,6 +94,8 @@ public class BasicTests {
         Assert.assertArrayEquals(rchannel, rchannel1, 0.00001);
     }
 
+
+    //tests appending an array to an existing wave
     @Test
     public void appendArrayToExistingWave() {
         double[] lchannel1 = {1.0};
@@ -88,6 +113,7 @@ public class BasicTests {
         Assert.assertArrayEquals(rchannel, rchannel3, 0.00001);
     }
 
+    //tests appending another SoundWave to an existing wave
     @Test
     public void appendWaveToExistingWave() {
         double[] lchannel1 = {1.0};
@@ -106,14 +132,24 @@ public class BasicTests {
         Assert.assertArrayEquals(rchannel, rchannel3, 0.00001);
     }
 
+
+    //tests adding an echo to an existing wave using arrays
     @Test
-    public void DFT() {
-        int freq = 300;
-        SoundWave wave = new SoundWave(freq, 0, 0.5, 0.3 );
-        double maxFreq = wave.highAmplitudeFreqComponent();
-        assertEquals(freq, maxFreq, 0.00001);
+    public void addEcho() {
+        double[] lchannel1 = {0.2, 0.6, 0.2, 0.4, 0.8, 0.1};
+        double[] rchannel1 = {0.2, 0.6, 0.2, 0.4, 0.8, 0.1};
+        double[] lchannelEcho = {0.2, 0.7, 0.5, 0.5, 1, 0.5, 0.05};
+        double[] rchannelEcho = {0.2, 0.7, 0.5, 0.5, 1, 0.5, 0.05};
+
+        SoundWave wave = new SoundWave(lchannel1,rchannel1);
+        wave = wave.addEcho(1, 0.5);
+        double[] lchannel3 = wave.getLeftChannel();
+        Assert.assertArrayEquals(lchannelEcho, lchannel3, 0.00001);
+        double[] rchannel3 = wave.getRightChannel();
+        Assert.assertArrayEquals(rchannelEcho, rchannel3, 0.00001);
     }
 
+    //tests a wave contained in another wave with arrays
     @Test
     public void simpleTestContains() {
         SoundWave wave = new SoundWave(new double[]{1, 2, 3, 4, 5}, new double[]{1, 2, 3, 4, 5});
@@ -122,6 +158,7 @@ public class BasicTests {
         assertTrue(wave.contains(wave2));
     }
 
+    //tests if a sin wave is contained in another wave
     @Test
     public void testContains() {
         SoundWave wave = new SoundWave(20, 0, 1, 5);
@@ -130,6 +167,8 @@ public class BasicTests {
         assertTrue(wave.contains(wave2));
     }
 
+
+    //tests the contains method even if waves are scaled
     @Test
     public void testContainsWithScaling() {
         SoundWave wave = new SoundWave(new double[]{2, 4, 6, 8, 4}, new double[]{3, 9, 7, 13, 15});
@@ -138,6 +177,7 @@ public class BasicTests {
         assertTrue(wave.contains(wave2));
     }
 
+    //tests the contains method with scaling and a sin wave
     @Test
     public void testContainsWithScaling2() {
         SoundWave wave = new SoundWave(100, 0, 0.5, 5);
@@ -146,6 +186,7 @@ public class BasicTests {
         Assert.assertFalse(wave.contains(wave2));
     }
 
+    //Tests similarity with two identical waves
     @Test
     public void testSimilarity() {
         SoundWave wave = new SoundWave (new double[]{0.1, 0.2, 0.3, 0.4, 0.5}, new double[]{0.3, 0.9, 0.7, 0.13, 0.15});
@@ -154,6 +195,7 @@ public class BasicTests {
         assertEquals(1.0, wave.similarity(wave2), 0.0001);
     }
 
+    //tests similarity with two identical and scaled waves
     @Test
     public void testSimilarityScaling() {
         SoundWave wave = new SoundWave (new double[]{0.1, 0.2, 0.3, 0.4, 0.5}, new double[]{0.3, 0.9, 0.7, 0.13, 0.15});
@@ -162,6 +204,7 @@ public class BasicTests {
         assertEquals(1.0, wave.similarity(wave2), 0.0001);
     }
 
+    //tests similarity for two relatively similar waves
     @Test
     public void testSimilarity2() {
         SoundWave wave = new SoundWave (new double[]{1, 0.2, 0.3, 0.4, 0.5}, new double[]{0.3, 0.9, 0.7, 0.13, 0.15});
@@ -170,6 +213,7 @@ public class BasicTests {
         assertTrue(wave.similarity(wave2) > 0.5);
     }
 
+    //tests similarity for relatively different waves
     @Test
     public void testSimilarity3() {
         SoundWave wave = new SoundWave (new double[]{1, 0.75, 0.2,}, new double[]{0.2, 0.3, 0.7});
@@ -186,12 +230,13 @@ public class BasicTests {
         assertTrue(wave.similarity(wave2) < 0.001);
     }
 
+    //tests similarity for waves where beta and gamma can be calculated manually
     @Test
     public void testSimilarity5() {
         SoundWave wave = new SoundWave (new double[]{0.9, 0.9, 0.9,}, new double[]{0.9, 0.9, 0.9});
         SoundWave wave2 = new SoundWave(new double[]{-0.9, -0.9, -0.9,}, new double[]{-0.9, -0.9, -0.9}); //beta < 0
         System.out.println(wave.similarity(wave2));
-        assertEquals(wave.similarity(wave2), 1 / (1 + 0.9 * 0.9 * 6), 0.001);
+        assertEquals( 1 / (1 + 0.9 * 0.9 * 6), wave.similarity(wave2), 0.001);
     }
 
 }
