@@ -14,10 +14,6 @@ public class WavePair implements Comparable{
         similarity = wave1.similarity(wave2);
     }
 
-    public WavePair(){
-        //TODO: check if empty object causes problems
-    }
-
     @Override
     public int compareTo(Object o) {
         WavePair other = (WavePair)o;
