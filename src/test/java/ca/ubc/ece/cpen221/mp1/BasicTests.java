@@ -180,6 +180,13 @@ public class BasicTests {
         assertTrue(wave.contains(wave2));
     }
 
+    //DFT on an empty wave
+    @Test
+    public void DFTEmpty() {
+        SoundWave wave = new SoundWave();
+        assertEquals(0.0, wave.highAmplitudeFreqComponent(), 0.0001);
+    }
+
     //tests the contains method with scaling and a sin wave
     @Test
     public void testContainsWithScaling2() {

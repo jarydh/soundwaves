@@ -337,7 +337,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      *
      * If the combined channels of the wave is all zeros, return frequency
      * of 0.0.
-     * Precondition: lchannel and rchannel are the same length.
+     * Precondition: lchannel and rchannel are the same length and are non-empty.
      *
      * @return the frequency of the wave component of highest amplitude.
      * If more than one frequency has the same amplitude contribution then
