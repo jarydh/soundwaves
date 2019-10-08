@@ -431,6 +431,8 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     /**
      * Determine if this wave fully contains the other sound wave as a pattern.
      *
+     * If either of the waves are empty, return false.
+     *
      * @param other is the wave to search for in this wave.
      * @return true if the other wave is contained in this after amplitude scaling,
      * and false if the other wave is not contained in this with any
@@ -439,6 +441,10 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     public boolean contains(SoundWave other) {
 
         if (other.samples > this.samples) {
+            return false;
+        }
+
+        if (other.samples == 0) {
             return false;
         }
 
