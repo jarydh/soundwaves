@@ -446,7 +446,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
 
         for (int i = 0; i <= this.samples - other.samples; i++) {
 
-            scalingFactor = this.lchannel.get(i) / other.lchannel.get(i);
+            scalingFactor = this.lchannel.get(i) / other.lchannel.get(0);
 
             if (containsChannelFromIndex(i, this.lchannel, other.lchannel, scalingFactor)) {
                 if (containsChannelFromIndex(i, this.rchannel, other.rchannel, scalingFactor)) {
@@ -477,7 +477,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
         double floatingPointError = 0.0001;
 
         for (int i = 0; i < containedSample.size(); i++) {
-            if ((scalingFactor - channel.get(i + startingIndex) / containedSample.get(i)) > floatingPointError) {
+            if (Math.abs(scalingFactor * containedSample.get(i) - channel.get(i + startingIndex) ) > floatingPointError) {
                 return false;
             }
         }

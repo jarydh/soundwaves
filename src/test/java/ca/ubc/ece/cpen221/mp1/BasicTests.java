@@ -152,17 +152,20 @@ public class BasicTests {
     //tests a wave contained in another wave with arrays
     @Test
     public void simpleTestContains() {
-        SoundWave wave = new SoundWave(new double[]{1, 2, 3, 4, 5}, new double[]{1, 2, 3, 4, 5});
-        SoundWave wave2 = new SoundWave(new double[]{2,3,4},new double[]{2, 3, 4});
+        SoundWave wave = new SoundWave(new double[]{0.1, 0.2, 0.3, 0.4, 0.5}, new double[]{0.1, 0.2, 0.3, 0.4, 0.5});
+        SoundWave wave2 = new SoundWave(new double[]{0.2,0.3,0.4},new double[]{0.2, 0.3, 0.4});
 
         assertTrue(wave.contains(wave2));
     }
 
-    //tests if a sin wave is contained in another wave
+    //tests if a sin wave is contained in another wave (starting from sample not 0)
     @Test
     public void testContains() {
-        SoundWave wave = new SoundWave(20, 0, 1, 5);
-        SoundWave wave2 = new SoundWave(20, Math.PI/2, 1, 1);
+        double[] zeros = new double [2000];
+
+        SoundWave wave = new SoundWave(2000, 0, 1, 5);
+        SoundWave wave2 = new SoundWave(zeros, zeros);
+        wave2.append(new SoundWave(2000, 0, 1, 1));
 
         assertTrue(wave.contains(wave2));
     }
