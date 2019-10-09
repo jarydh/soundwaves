@@ -15,7 +15,7 @@ public class QualitativeTests {
 
     //Tests the sin wave is creating at the correct frequency. Should be a note A.
     //@Test
-    public void makeSinWave(){
+    public void makeSinWave() {
         StdPlayer.open();
         SoundWave wave = new SoundWave(440, 0, 1, 5);
         wave.sendToStereoSpeaker();
@@ -26,7 +26,7 @@ public class QualitativeTests {
         Should have the bass line removed. This same song plays when testing the main function.
      */
     //@Test
-    public void testHighPass(){
+    public void testHighPass() {
         StdPlayer.open("mp3/energy.mp3");
         SoundWave sw = new SoundWave();
         while (!StdPlayer.isEmpty()) {
@@ -34,7 +34,7 @@ public class QualitativeTests {
             double[] rchannel = StdPlayer.getRightChannel();
             sw.append(lchannel, rchannel);
         }
-        sw = sw.highPassFilter(100,2);
+        sw = sw.highPassFilter(100, 2);
         sw.scale(10);
         sw.sendToStereoSpeaker();
         StdPlayer.close();
@@ -45,7 +45,7 @@ public class QualitativeTests {
      * Also used to compare with the high pass filter.
      */
     //@Test
-    public void testMain(){
+    public void testMain() {
         SoundWave.main(new String[0]);
     }
 

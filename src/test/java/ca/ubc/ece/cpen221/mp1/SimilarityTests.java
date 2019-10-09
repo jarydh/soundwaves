@@ -8,12 +8,11 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class similarityTests {
+public class SimilarityTests {
 
     //create all possible pairs of three waves with no repeats
     @Test
-    public void testCreatePairs()
-    {
+    public void testCreatePairs() {
         SoundWave a = new SoundWave(100, 0.5, 0.5, 2);
         SoundWave b = new SoundWave(150, 2, 1, 5);
         SoundWave c = new SoundWave(4000, 7, 0.1, 1);
@@ -25,9 +24,9 @@ public class similarityTests {
 
 
         Set<WavePair> expected = new HashSet<>();
-        expected.add(new WavePair(a,b));
-        expected.add(new WavePair(a,c));
-        expected.add(new WavePair(b,c));
+        expected.add(new WavePair(a, b));
+        expected.add(new WavePair(a, c));
+        expected.add(new WavePair(b, c));
 
         Set<WavePair> actual = SoundWaveSimilarity.createPairs(allWaves);
 
@@ -37,19 +36,20 @@ public class similarityTests {
 
     //ensure that overridden equals works for WavePair and SoundWave
     @Test
-    public void testEquals(){
+    public void testEquals() {
         SoundWave a = new SoundWave(100, 0.5, 0.5, 2);
         SoundWave b = new SoundWave(150, 2, 1, 5);
 
-        WavePair pair1 = new WavePair(a,b);
-        WavePair pair2 = new WavePair(b,a);
+        WavePair pair1 = new WavePair(a, b);
+        WavePair pair2 = new WavePair(b, a);
 
         assertTrue(pair1.equals(pair2));
         assertEquals(pair1.hashCode(), pair2.hashCode());
 
     }
 
-    //create a simple set of sine waves with clear frequency grouping but similar lengths and amplitudes
+    //create a simple set of sine waves with clear
+    //frequency grouping but similar lengths and amplitudes
 //    @Test
 //    public void testSimilarity1(){
 //        Set <SoundWave> comparisonSet = new HashSet<SoundWave>();
@@ -79,17 +79,17 @@ public class similarityTests {
 
     //test that one elementary split will group clips appropriately
     @Test
-    public void testSimilarity1(){
-        Set <SoundWave> comparisonSet = new HashSet<SoundWave>();
-        Set <SoundWave> expected = new HashSet<SoundWave>();
+    public void testSimilarity1() {
+        Set<SoundWave> comparisonSet = new HashSet<SoundWave>();
+        Set<SoundWave> expected = new HashSet<SoundWave>();
 
-        double[] target_s = {0.5, 0.5, 0.5};
-        double[] a_s = {0.49, 0.49, 0.49};
-        double[] b_s = {0.47, 0.47, 0.47};
+        double[] targetS = {0.5, 0.5, 0.5};
+        double[] aS = {0.49, 0.49, 0.49};
+        double[] bS = {0.47, 0.47, 0.47};
 
-        SoundWave target = new SoundWave(target_s, target_s);
-        SoundWave a = new SoundWave(a_s, a_s);
-        SoundWave b = new SoundWave(b_s, b_s);
+        SoundWave target = new SoundWave(targetS, targetS);
+        SoundWave a = new SoundWave(aS, aS);
+        SoundWave b = new SoundWave(bS, bS);
 
         expected.add(target);
         expected.add(a);
@@ -101,18 +101,19 @@ public class similarityTests {
         assertEquals(expected, SoundWaveSimilarity.getSimilarWaves(comparisonSet, 2, target));
     }
 
-    //test splitting into a large number of partitions, and test resolution when working with small differences
+    //test splitting into a large number of partitions,
+    // and test resolution when working with small differences
     @Test
-    public void testSimilarity2(){
-        Set <SoundWave> comparisonSet = new HashSet<SoundWave>();
-        Set <SoundWave> expected = new HashSet<SoundWave>();
-        Set <SoundWave> targetSet = new HashSet<SoundWave>();
+    public void testSimilarity2() {
+        Set<SoundWave> comparisonSet = new HashSet<SoundWave>();
+        Set<SoundWave> expected = new HashSet<SoundWave>();
+        Set<SoundWave> targetSet = new HashSet<SoundWave>();
 
-        double[] target_s = {1, 0.9, 1};
-        double[] a_s = {0.999, 0.899, 0.999};
+        double[] targetS = {1, 0.9, 1};
+        double[] aS = {0.999, 0.899, 0.999};
 
-        SoundWave target = new SoundWave(target_s, target_s);
-        SoundWave a = new SoundWave(a_s, a_s);
+        SoundWave target = new SoundWave(targetS, targetS);
+        SoundWave a = new SoundWave(aS, aS);
 
         expected.add(target);
         expected.add(a);
@@ -122,12 +123,13 @@ public class similarityTests {
         comparisonSet.add(target);
         comparisonSet.add(a);
 
-        for(int i = -100; i < 0; i += 1){
+        for (int i = -100; i < 0; i += 1) {
             double next = i / 100.0;
-            comparisonSet.add(new SoundWave(new double[] {next,next,next}, new double[] {next,next,next}));
+            comparisonSet.add(new SoundWave(new double[] {next, next, next},
+                    new double[] {next, next, next}));
         }
 
-        assertEquals(expected, SoundWaveSimilarity.getSimilarWaves(comparisonSet,2, target));
-        assertEquals(targetSet, SoundWaveSimilarity.getSimilarWaves(comparisonSet,3, target));
+        assertEquals(expected, SoundWaveSimilarity.getSimilarWaves(comparisonSet, 2, target));
+        assertEquals(targetSet, SoundWaveSimilarity.getSimilarWaves(comparisonSet, 3, target));
     }
 }
