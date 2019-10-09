@@ -1,6 +1,10 @@
 package ca.ubc.ece.cpen221.mp1;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class SoundWaveSimilarity {
 
@@ -19,7 +23,7 @@ public class SoundWaveSimilarity {
      *                  between 1 and comparison set
      * @param w wave to search for, not null and included in comparison set
      */
-    private SoundWaveSimilarity (Set<SoundWave> comparisonSet, int numGroups, SoundWave w) {
+    private SoundWaveSimilarity(Set<SoundWave> comparisonSet, int numGroups, SoundWave w) {
         this.numGroups = numGroups;
         this.w = w;
 
@@ -41,7 +45,9 @@ public class SoundWaveSimilarity {
      * @param w             is not null and is included in comparisonSet.
      * @return the set of waves that are in the same group as w after grouping.
      */
-    public static Set<SoundWave> getSimilarWaves(Set<SoundWave> comparisonSet, int numGroups, SoundWave w) {
+    public static Set<SoundWave> getSimilarWaves(Set<SoundWave> comparisonSet,
+                                                 int numGroups,
+                                                 SoundWave w) {
         SoundWaveSimilarity operator = new SoundWaveSimilarity(comparisonSet, numGroups, w);
         return operator.getSimilarWaves();
     }
@@ -53,7 +59,7 @@ public class SoundWaveSimilarity {
      * @return returns the set of soundwaves which contains
      * the wave w that is being searched for.
      */
-    private Set<SoundWave> getSimilarWaves(){
+    private Set<SoundWave> getSimilarWaves() {
         int nextPairIndex = 0;
         WavePair nextPair;
 
@@ -74,9 +80,9 @@ public class SoundWaveSimilarity {
     static Set<WavePair> createPairs(Set<SoundWave> allWaves) {
         Set<WavePair> allPairs = new HashSet<>();
 
-        for(SoundWave wave1 : allWaves){
-            for(SoundWave wave2 : allWaves){
-                if(!wave1.equals(wave2)) {
+        for (SoundWave wave1 : allWaves) {
+            for (SoundWave wave2 : allWaves) {
+                if (!wave1.equals(wave2)) {
                     allPairs.add(new WavePair(wave1, wave2));
                 }
             }
@@ -94,7 +100,7 @@ public class SoundWaveSimilarity {
      * @return a list of wave pairs sorted in order from most similar to least
      * similar.
      */
-    private static List<WavePair> sortPairs (Set<WavePair> allPairs) {
+    private static List<WavePair> sortPairs(Set<WavePair> allPairs) {
         List<WavePair> sortedPairs = new ArrayList<WavePair>(allPairs);
         Collections.sort(sortedPairs);
 
@@ -108,7 +114,7 @@ public class SoundWaveSimilarity {
      * @param allWaves a set containing all the waves to be put into partitions
      * @return a set containing partitions (sets) with one wave in each partition
      */
-    private static Set<Set<SoundWave>> createPartitions (Set<SoundWave> allWaves) {
+    private static Set<Set<SoundWave>> createPartitions(Set<SoundWave> allWaves) {
         Set<Set<SoundWave>> allPartitions = new HashSet<Set<SoundWave>>();
         Set<SoundWave> nextPartition;
 
@@ -131,7 +137,7 @@ public class SoundWaveSimilarity {
      *
      * @param pair the pair of waves to be merged
      */
-    private void mergePartitions (WavePair pair) {
+    private void mergePartitions(WavePair pair) {
         Set<SoundWave> set1 = findSetContaining(pair.wave1);
         Set<SoundWave> set2 = findSetContaining(pair.wave2);
 
@@ -154,7 +160,7 @@ public class SoundWaveSimilarity {
      * @return a set of soundwaves containing the given wave,
      * found in the master set of all partitions
      */
-    private Set<SoundWave> findSetContaining (SoundWave wave) throws IllegalArgumentException {
+    private Set<SoundWave> findSetContaining(SoundWave wave) throws IllegalArgumentException {
         for (Set<SoundWave> nextPartition : allPartitions) {
             if (nextPartition.contains(wave)) {
                 return nextPartition;

@@ -111,7 +111,6 @@ public class similarityTests {
         double[] target_s = {1, 0.9, 1};
         double[] a_s = {0.999, 0.899, 0.999};
 
-
         SoundWave target = new SoundWave(target_s, target_s);
         SoundWave a = new SoundWave(a_s, a_s);
 
@@ -123,8 +122,6 @@ public class similarityTests {
         comparisonSet.add(target);
         comparisonSet.add(a);
 
-
-
         for(int i = -100; i < 0; i += 1){
             double next = i / 100.0;
             comparisonSet.add(new SoundWave(new double[] {next,next,next}, new double[] {next,next,next}));
@@ -133,5 +130,4 @@ public class similarityTests {
         assertEquals(expected, SoundWaveSimilarity.getSimilarWaves(comparisonSet,2, target));
         assertEquals(targetSet, SoundWaveSimilarity.getSimilarWaves(comparisonSet,3, target));
     }
-
 }

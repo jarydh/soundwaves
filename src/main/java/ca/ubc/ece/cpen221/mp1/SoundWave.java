@@ -3,7 +3,10 @@ package ca.ubc.ece.cpen221.mp1;
 import ca.ubc.ece.cpen221.mp1.utils.HasSimilarity;
 import javazoom.jl.player.StdPlayer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Map;
+import java.util.HashMap;
 
 public class SoundWave implements HasSimilarity<SoundWave> {
 
@@ -66,7 +69,8 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      */
     public SoundWave(double freq, double phase, double amplitude, double duration) {
         for (int i = 0; i < duration * SAMPLES_PER_SECOND; i++) {
-            Double nextAmp = amplitude * Math.sin(freq * 2.0 * Math.PI * ((double) i / SAMPLES_PER_SECOND) - phase);
+            Double nextAmp = amplitude
+                    * Math.sin(freq * 2.0 * Math.PI * ((double) i / SAMPLES_PER_SECOND) - phase);
             lchannel.add(nextAmp);
             rchannel.add(nextAmp);
         }
@@ -315,7 +319,8 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      */
     public SoundWave highPassFilter(int dt, double RC) {
         double alpha = RC / (RC + dt);
-        return new SoundWave(filterChannel(getLeftChannel(), alpha), filterChannel(getRightChannel(), alpha));
+        return new SoundWave(filterChannel(getLeftChannel(), alpha),
+                filterChannel(getRightChannel(), alpha));
     }
 
     /**
@@ -487,12 +492,16 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * contained channel does not start at this index or is not contained
      * with any possible scaling
      */
-    private static Boolean containsChannelFromIndex(int startingIndex, ArrayList<Double> channel, ArrayList<Double> containedSample, double scalingFactor) {
+    private static Boolean containsChannelFromIndex(int startingIndex,
+                                                    ArrayList<Double> channel,
+                                                    ArrayList<Double> containedSample,
+                                                    double scalingFactor) {
 
         double floatingPointError = 0.0001;
 
         for (int i = 0; i < containedSample.size(); i++) {
-            if (Math.abs(scalingFactor * containedSample.get(i) - channel.get(i + startingIndex) ) > floatingPointError) {
+            if (Math.abs(scalingFactor * containedSample.get(i)
+                    - channel.get(i + startingIndex)) > floatingPointError) {
                 return false;
             }
         }
@@ -503,9 +512,11 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     /**
      * Determine the similarity between this wave and another wave.
      * The similarity metric, gamma, is the inverse of one plus the sum of squares of
-     * instantaneous differences, with the other channel multiplied by a scaling factor to find the best fit.
+     * instantaneous differences, with the other channel multiplied by a
+     * scaling factor to find the best fit.
      *
-     * This method returns the average gamma between the case where the first and second wave is scaled.
+     * This method returns the average gamma between the case where the
+     * first and second wave is scaled.
      *
      * The similarity between an empty wave and a non-empty wave is always 0. The similarity between
      * two empty waves is 1.
@@ -518,7 +529,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
             return 1;
         } else if (this.samples == 0 || other.samples == 0) {
             return 0;
-        }else {
+        } else {
             return (asymmetricSimilarity(this, other) + asymmetricSimilarity(other, this)) / 2;
         }
     }
@@ -526,13 +537,14 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     /**
      * Determine the ordered similarity between this wave and another wave.
      * The similarity metric, gamma, is the inverse of one plus the sum of squares of
-     * instantaneous differences, with the other channel multiplied by a scaling factor to find the best fit.
+     * instantaneous differences, with the other channel multiplied by a scaling factor
+     * to find the best fit.
      *
      * @param primary is not null and non empty.
      * @param secondary is not null and non empty. The wave to be multiplied by the scaling factor
      * @return gamma, the similarity between this wave and other between 0 and 1.
      */
-    public static double asymmetricSimilarity(SoundWave primary, SoundWave secondary){
+    public static double asymmetricSimilarity(SoundWave primary, SoundWave secondary) {
 
         double sum = minimizeSum(primary, secondary);
 
@@ -555,7 +567,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
     private static double minimizeSum(SoundWave primary, SoundWave secondary) {
         double a = 0;
 
-        for (int i = 0; i < secondary.samples; i++){
+        for (int i = 0; i < secondary.samples; i++) {
             a += Math.pow(secondary.lchannel.get(i), 2) + (Math.pow(secondary.rchannel.get(i), 2));
         }
 
@@ -569,7 +581,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
 
         double c = 0;
 
-        for (int i =0; i < primary.samples; i++){
+        for (int i = 0; i < primary.samples; i++) {
             c += Math.pow(primary.lchannel.get(i), 2) + (Math.pow(primary.rchannel.get(i), 2));
         }
 
@@ -577,7 +589,7 @@ public class SoundWave implements HasSimilarity<SoundWave> {
 
         if (betaMin <= 0) {
             return c;
-        }else{
+        } else {
             return a * betaMin * betaMin + b * betaMin + c;
         }
 
@@ -595,11 +607,15 @@ public class SoundWave implements HasSimilarity<SoundWave> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         SoundWave soundWave = (SoundWave) o;
-        return lchannel.equals(soundWave.lchannel) &&
-                rchannel.equals(soundWave.rchannel);
+        return lchannel.equals(soundWave.lchannel)
+                && rchannel.equals(soundWave.rchannel);
     }
 
     @Override
