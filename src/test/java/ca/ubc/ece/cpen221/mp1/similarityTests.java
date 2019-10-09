@@ -8,7 +8,7 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SimilairtyTests {
+public class similarityTests {
 
     //create all possible pairs of three waves with no repeats
     @Test
