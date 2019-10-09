@@ -142,8 +142,12 @@ public class SoundWave implements HasSimilarity<SoundWave> {
 
         for (int i = 0; i < lchannel.length; i++) {
             this.lchannel.add(lchannel[i]);
+        }
+
+        for (int i = 0; i < rchannel.length; i++) {
             this.rchannel.add(rchannel[i]);
         }
+
         makeEqualLength();
         updateSamples();
     }
@@ -171,7 +175,6 @@ public class SoundWave implements HasSimilarity<SoundWave> {
             rchannel.add(0.0);
         }
     }
-
 
     /**
      * Append a wave to this wave.
@@ -232,11 +235,17 @@ public class SoundWave implements HasSimilarity<SoundWave> {
      * Create a new wave by adding an echo to this wave. Will clip values
      * above 1 and below -1.
      *
+     * If the wave is empty, just returns another empty wave.
+     *
      * @param delta > 0. delta is the lag between this wave and the echo wave.
      * @param alpha is the damping factor applied to the echo wave, 0 < alpha <= 1.
      * @return a new sound wave with an echo.
      */
     public SoundWave addEcho(int delta, double alpha) {
+        if (this.samples == 0) {
+            return this;
+        }
+
         double[] zeros = new double[delta];
         SoundWave echo = new SoundWave(zeros, zeros);
         echo.append(this);

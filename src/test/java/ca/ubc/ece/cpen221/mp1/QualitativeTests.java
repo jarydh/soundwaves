@@ -49,10 +49,4 @@ public class QualitativeTests {
         SoundWave.main(new String[0]);
     }
 
-    //TODO Implement these tests
-    //@Test
-    public void groupClips () {
-
-
-    }
 }

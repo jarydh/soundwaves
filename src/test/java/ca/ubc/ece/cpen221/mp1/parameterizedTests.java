@@ -9,7 +9,7 @@ public class parameterizedTests {
     //Tests the DFT for waves with 1 frequency
     @Test
     public void DFT_OneFreq() {
-        for (int freq = 0; freq < 1000; freq += 100) {
+        for (int freq = 0; freq < 1000; freq += 200) {
             SoundWave wave = new SoundWave(freq, 5, 0.5, 0.1 );
             double maxFreq = wave.highAmplitudeFreqComponent();
             assertEquals(freq, maxFreq, 0.00001);
@@ -22,7 +22,7 @@ public class parameterizedTests {
         int freq1;
         int freq2;
         int freq3;
-        for (int i = 1; i < 10; i ++) {
+        for (int i = 1; i < 10; i += 2) {
             freq1 = i * 100;
             freq2 = i * 200;
             freq3 = i * 300;
@@ -46,7 +46,7 @@ public class parameterizedTests {
         double[] zeros = {0, 0, 0};
 
 
-        for (int i = 1; i < 10; i ++) {
+        for (int i = 1; i < 10; i += 2) {
             int freq = i * 100;
 
             SoundWave wave2 = new SoundWave(zeros, zeros);
@@ -60,4 +60,26 @@ public class parameterizedTests {
         }
     }
 
+    //assumes DFT method works, uses it to test high pass filter
+    //tests if the lower frequencies are reduced
+    @Test
+    public void testHighPassFilter() {
+        int freq1;
+        int freq2;
+        for (int i = 1; i < 10; i += 2) {
+            freq1 = i * 100;
+            freq2 = i * 200;
+            SoundWave wave1 = new SoundWave(freq1, 0, 0.4, 0.1 );
+            SoundWave wave2 = new SoundWave(freq2, 2, 0.3, 0.1 );
+            SoundWave wave = wave1.add(wave2);
+
+            double maxFreq = wave.highAmplitudeFreqComponent();
+            assertEquals(freq1, maxFreq, 0.00001);
+
+            wave = wave.highPassFilter(5, 6);
+
+            maxFreq = wave.highAmplitudeFreqComponent();
+            assertEquals(freq2, maxFreq, 0.00001);
+        }
+    }
 }

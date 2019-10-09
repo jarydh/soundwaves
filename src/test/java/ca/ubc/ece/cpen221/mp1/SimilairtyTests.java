@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 public class SimilairtyTests {
 
-    //create all possible paris of three waves with no repeats
+    //create all possible pairs of three waves with no repeats
     @Test
     public void testCreatePairs()
     {
